@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090A0C">
+
+<title>Zenith Dias — Independent Digital Studio</title>
+<meta name="description" content="Zenith Dias é um estúdio digital independente especializado em estratégia, web design, desenvolvimento e experiências digitais para marcas que querem elevar sua presença online.">
+<meta name="author" content="Zenith Dias">
+<meta name="robots" content="index, follow">
+
+<!-- PENDÊNCIA 03 — URL do GitHub Pages. Trocar pelo domínio definitivo quando existir (ver PENDENCIAS.md) -->
+<link rel="canonical" href="https://gabrieldias-dev.github.io/zenith-dias/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Zenith Dias">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="Zenith Dias — Independent Digital Studio">
+<meta property="og:description" content="Transformamos presença digital em percepção de valor. Estratégia, web design, desenvolvimento e experiências digitais.">
+<meta property="og:url" content="https://gabrieldias-dev.github.io/zenith-dias/">
+<!-- PENDÊNCIA 04 — og:image ainda não existe. Quando a arte 1200x630 for criada:
+     <meta property="og:image" content="https://gabrieldias-dev.github.io/zenith-dias/assets/og.png"> -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Zenith Dias — Independent Digital Studio">
+<meta name="twitter:description" content="Transformamos presença digital em percepção de valor.">
+
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@300..500&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<script>
+/* Decide o estado inicial antes da primeira pintura, para o loader nao piscar.
+   Sem JS, a regra `html:not(.has-js) .loader{display:none}` mantem o site utilizavel. */
+(function () {
+  var h = document.documentElement;
+  h.classList.add('has-js');
+  var calmo = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var visto = false;
+  try { visto = sessionStorage.getItem('zd:entrada') === '1'; } catch (e) {}
+  if (calmo || visto) { h.classList.add('sem-loader', 'is-ready'); }
+})();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Zenith Dias",
+  "alternateName": "Zenith Dias — Independent Digital Studio",
+  "description": "Estúdio digital independente especializado em estratégia, web design, desenvolvimento e experiências digitais.",
+  "url": "https://gabrieldias-dev.github.io/zenith-dias/",
+  "slogan": "Presence, elevated.",
+  "foundingDate": "2026",
+  "founder": { "@type": "Person", "name": "Gabriel Dias" },
+  "address": { "@type": "PostalAddress", "addressLocality": "São Paulo", "addressRegion": "SP", "addressCountry": "BR" },
+  "areaServed": "Worldwide",
+  "knowsAbout": ["Digital Strategy", "Web Design", "Web Development", "Digital Experience"]
+}
+</script>
+</head>
+
+<body class="s-dark">
+
+<a class="salto" href="#hero">Ir para o conteúdo</a>
+
+<!-- ══ EXPERIÊNCIA INICIAL ══════════════════════════════════════════════ -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader__marca">
+    <span class="loader__nome">ZENITH</span><span class="loader__ponto">•</span>
+  </div>
+  <div class="loader__medidor">
+    <span class="loader__num" id="loader-num">00</span>
+    <span class="loader__trilho"><span class="loader__fio" id="loader-fio"></span></span>
+  </div>
+</div>
+
+<!-- ══ INSTRUMENTOS (decorativos) ═══════════════════════════════════════ -->
+<div class="cursor" id="cursor" aria-hidden="true">
+  <span class="cursor__anel"></span>
+  <span class="cursor__rotulo" id="cursor-rotulo"></span>
+</div>
+
+<!-- Medidor de scroll: sobe de 00 até o Zenith Point, no topo. -->
+<div class="medidor" id="medidor" aria-hidden="true">
+  <span class="medidor__cap medidor__cap--alto">100<i>•</i></span>
+  <span class="medidor__trilho">
+    <span class="medidor__fio"></span>
+    <i class="medidor__tick" style="--at:.25"></i>
+    <i class="medidor__tick" style="--at:.5"></i>
+    <i class="medidor__tick" style="--at:.75"></i>
+    <span class="medidor__marca"><b id="medidor-num">00</b></span>
+  </span>
+  <span class="medidor__cap medidor__cap--baixo">00</span>
+</div>
+
+<!-- ══ HEADER ═══════════════════════════════════════════════════════════ -->
+<header class="cabeca" id="cabeca">
+  <div class="cabeca__in">
+    <a class="marca" href="#hero" aria-label="Zenith Dias — início">
+      <span class="marca__z">ZENITH</span><span class="marca__d">DIAS</span><span class="marca__p" aria-hidden="true">•</span>
+    </a>
+
+    <nav class="nav" aria-label="Navegação principal">
+      <a href="#work"><span>WORK</span></a>
+      <a href="#about"><span>ABOUT</span></a>
+      <a href="#services"><span>SERVICES</span></a>
+      <a href="#contact"><span>CONTACT</span></a>
+    </nav>
+
+    <a class="cta-topo" href="#contact" data-magnetico>
+      <span>START A PROJECT</span><i aria-hidden="true">↗</i>
+    </a>
+
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="menu">
+      <span class="menu-btn__t">MENU</span>
+      <span class="menu-btn__i" aria-hidden="true"><i></i><i></i></span>
+    </button>
+  </div>
+</header>
+
+<!-- Menu mobile -->
+<div class="menu" id="menu" hidden>
+  <nav class="menu__nav" aria-label="Navegação">
+    <a href="#work"><em>01</em><span>WORK</span></a>
+    <a href="#services"><em>02</em><span>SERVICES</span></a>
+    <a href="#about"><em>03</em><span>ABOUT</span></a>
+    <a href="#contact"><em>04</em><span>CONTACT</span></a>
+  </nav>
+  <div class="menu__pe">
+    <p class="mono">SÃO PAULO — BRAZIL<br>AVAILABLE WORLDWIDE</p>
+    <p class="mono">PRESENCE, ELEVATED<span class="pt">•</span></p>
+  </div>
+</div>
+
+<main id="conteudo">
+
+  <!-- ══ HERO ═══════════════════════════════════════════════════════════ -->
+  <section class="hero" id="hero">
+    <div class="hero__grade" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+    <div class="hero__in">
+      <p class="mono hero__eyebrow" data-reveal>
+        INDEPENDENT DIGITAL STUDIO <span class="pt" aria-hidden="true">•</span> EST. / 2026
+      </p>
+
+      <h1 class="display hero__h1" data-linhas>
+        <span class="linha"><span>SUA EMPRESA</span></span>
+        <span class="linha"><span>EVOLUIU.</span></span>
+        <span class="linha linha--dim"><span>SEU DIGITAL</span></span>
+        <span class="linha linha--dim"><span>TAMBÉM DEVERIA.</span></span>
+      </h1>
+
+      <div class="hero__base">
+        <p class="lead hero__lead" data-reveal style="--d:.55s">
+          Criamos sites estratégicos e experiências digitais para marcas
+          que querem ser percebidas à altura do que entregam.
+        </p>
+
+        <div class="hero__acoes" data-reveal style="--d:.68s">
+          <a class="btn btn--forte" href="#work" data-magnetico>
+            <span>Conheça nossos projetos</span><i aria-hidden="true">↘</i>
+          </a>
+          <a class="btn btn--fio" href="#contact" data-magnetico>
+            <span>Inicie um projeto</span><i aria-hidden="true">↗</i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__meta hero__meta--esq mono" data-reveal style="--d:.8s">
+      <span>ZENITH DIAS</span>
+      <span>SÃO PAULO — BRAZIL</span>
+      <span>AVAILABLE WORLDWIDE</span>
+    </div>
+
+    <div class="hero__meta hero__meta--dir mono" data-reveal style="--d:.86s">
+      <span>STRATEGY / DESIGN / TECHNOLOGY</span>
+      <span class="hero__slogan">Presence, elevated<i class="pt" aria-hidden="true">•</i></span>
+    </div>
+
+    <div class="scroll-ind mono" data-reveal style="--d:.92s" aria-hidden="true">
+      <span>SCROLL</span>
+      <span class="scroll-ind__fio"><i></i></span>
+      <span>01</span>
+    </div>
+  </section>
+
+  <!-- ══ MANIFESTO ══════════════════════════════════════════════════════ -->
+  <section class="secao manifesto" aria-labelledby="t-manifesto">
+    <div class="rail">
+      <div class="manifesto__grid">
+        <h2 class="h2 manifesto__h2" id="t-manifesto" data-palavras>
+          GOOD BUSINESSES SHOULDN'T LOOK ORDINARY.
+        </h2>
+
+        <div class="manifesto__txt">
+          <p data-reveal>
+            A Zenith Dias existe para reduzir a distância entre o valor que uma
+            empresa entrega e a maneira como ela é percebida.
+          </p>
+          <p data-reveal style="--d:.12s">
+            Unimos estratégia, design e tecnologia para construir experiências
+            digitais capazes de representar negócios com mais clareza, presença
+            e autoridade.
+          </p>
+          <p class="mono manifesto__tag" data-reveal style="--d:.24s">
+            PERCEPÇÃO <span aria-hidden="true">/</span> ESTRATÉGIA <span aria-hidden="true">/</span> PRESENÇA
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FRASE ISOLADA ══════════════════════════════════════════════════ -->
+  <section class="secao citacao" aria-label="Nossa premissa">
+    <div class="rail">
+      <p class="citacao__txt" data-linhas>
+        <span class="linha"><span>Criamos a primeira</span></span>
+        <span class="linha"><span>impressão que acontece</span></span>
+        <span class="linha"><span>antes da primeira</span></span>
+        <span class="linha"><span>conversa<i class="pt" aria-hidden="true">•</i></span></span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ 01 / SELECTED WORK ═════════════════════════════════════════════ -->
+  <section class="secao trabalho" id="work" aria-labelledby="t-work">
+    <div class="rail">
+      <header class="secao__topo">
+        <p class="mono num-secao">01 <span aria-hidden="true">/</span> SELECTED WORK</p>
+        <h2 class="h2" id="t-work" data-linhas>
+          <span class="linha"><span>WORK THAT</span></span>
+          <span class="linha"><span>SPEAKS BEFORE</span></span>
+          <span class="linha"><span>WE DO.</span></span>
+        </h2>
+      </header>
+    </div>
+
+    <ol class="projetos">
+
+      <!-- 001 -->
+      <li class="projeto" data-projeto>
+        <a class="projeto__link" href="https://gabrieldias-dev.github.io/pernil-co/" target="_blank" rel="noopener noreferrer" data-cursor="LIVE ↗">
+          <figure class="chapa" style="--p-bg:#0a0908; --p-ink:#f2efe9; --p-accent:#fea224">
+            <div class="chapa__quadro">
+              <!-- Captura real entra aqui e cobre a planta:
+                   <img src="assets/img/work/pernil.webp" alt="Site da Pernil&Co." loading="lazy" decoding="async"> -->
+              <div class="planta" aria-hidden="true">
+                <span class="planta__b planta__b--hero"></span>
+                <span class="planta__b planta__b--t1"></span>
+                <span class="planta__b planta__b--t2"></span>
+                <span class="planta__b planta__b--cta"></span>
+                <span class="planta__b planta__b--c1"></span>
+                <span class="planta__b planta__b--c2"></span>
+                <span class="planta__b planta__b--faixa"></span>
+                <span class="planta__eixo"></span>
+              </div>
+              <p class="chapa__nota mono" aria-hidden="true">LAYOUT <span>/</span> 001</p>
+              <ul class="chapa__cores mono" aria-label="Paleta do projeto">
+                <li><i style="background:#0a0908"></i>#0A0908</li>
+                <li><i style="background:#f2efe9"></i>#F2EFE9</li>
+                <li><i style="background:#fea224"></i>#FEA224</li>
+              </ul>
+            </div>
+          </figure>
+
+          <div class="projeto__ficha">
+            <p class="mono projeto__id">PROJECT <span aria-hidden="true">/</span> 001</p>
+            <h3 class="h3 projeto__nome">Pernil<span class="amp">&amp;</span>Co.</h3>
+            <p class="projeto__seg mono">FOOD SERVICE — EVENTOS E CORPORATIVO</p>
+            <ul class="projeto__servs mono">
+              <li>Web Design</li>
+              <li>Development</li>
+              <li>Digital Experience</li>
+            </ul>
+            <p class="projeto__ano mono">2026 <span class="tag tag--live">NO AR</span></p>
+          </div>
+        </a>
+      </li>
+
+      <!-- 002 -->
+      <li class="projeto projeto--inverso" data-projeto>
+        <div class="projeto__link" data-cursor="EM PRODUÇÃO">
+          <figure class="chapa" style="--p-bg:#0d103f; --p-ink:#f7f2e9; --p-accent:#c9a55d">
+            <div class="chapa__quadro">
+              <div class="planta planta--editorial" aria-hidden="true">
+                <span class="planta__b planta__b--hero"></span>
+                <span class="planta__b planta__b--t1"></span>
+                <span class="planta__b planta__b--t2"></span>
+                <span class="planta__b planta__b--cta"></span>
+                <span class="planta__b planta__b--c1"></span>
+                <span class="planta__b planta__b--c2"></span>
+                <span class="planta__b planta__b--faixa"></span>
+                <span class="planta__eixo"></span>
+              </div>
+              <p class="chapa__nota mono" aria-hidden="true">LAYOUT <span>/</span> 002</p>
+              <ul class="chapa__cores mono" aria-label="Paleta do projeto">
+                <li><i style="background:#0d103f"></i>#0D103F</li>
+                <li><i style="background:#f7f2e9"></i>#F7F2E9</li>
+                <li><i style="background:#c9a55d"></i>#C9A55D</li>
+              </ul>
+            </div>
+          </figure>
+
+          <div class="projeto__ficha">
+            <p class="mono projeto__id">PROJECT <span aria-hidden="true">/</span> 002</p>
+            <h3 class="h3 projeto__nome">Setti Confeitaria</h3>
+            <p class="projeto__seg mono">CONFEITARIA AUTORAL — ENCOMENDA</p>
+            <ul class="projeto__servs mono">
+              <li>Digital Strategy</li>
+              <li>Web Design</li>
+              <li>Development</li>
+            </ul>
+            <p class="projeto__ano mono">2026 <span class="tag">EM PRODUÇÃO</span></p>
+          </div>
+        </div>
+      </li>
+
+      <!-- 003 -->
+      <li class="projeto" data-projeto>
+        <div class="projeto__link" data-cursor="EM PRODUÇÃO">
+          <figure class="chapa" style="--p-bg:#0F1417; --p-ink:#E9EDEC; --p-accent:#256F73">
+            <div class="chapa__quadro">
+              <div class="planta planta--institucional" aria-hidden="true">
+                <span class="planta__b planta__b--hero"></span>
+                <span class="planta__b planta__b--t1"></span>
+                <span class="planta__b planta__b--t2"></span>
+                <span class="planta__b planta__b--cta"></span>
+                <span class="planta__b planta__b--c1"></span>
+                <span class="planta__b planta__b--c2"></span>
+                <span class="planta__b planta__b--faixa"></span>
+                <span class="planta__eixo"></span>
+              </div>
+              <p class="chapa__nota mono" aria-hidden="true">LAYOUT <span>/</span> 003</p>
+              <ul class="chapa__cores mono" aria-label="Paleta do projeto">
+                <li><i style="background:#0F1417"></i>#0F1417</li>
+                <li><i style="background:#E9EDEC"></i>#E9EDEC</li>
+                <li><i style="background:#256F73"></i>#256F73</li>
+              </ul>
+            </div>
+          </figure>
+
+          <div class="projeto__ficha">
+            <p class="mono projeto__id">PROJECT <span aria-hidden="true">/</span> 003</p>
+            <h3 class="h3 projeto__nome">Escritório de Advocacia</h3>
+            <p class="projeto__seg mono">DIREITO — CLIENTE SOB CONFIDENCIALIDADE</p>
+            <ul class="projeto__servs mono">
+              <li>Digital Strategy</li>
+              <li>Web Design</li>
+              <li>Development</li>
+            </ul>
+            <p class="projeto__ano mono">2026 <span class="tag">EM PRODUÇÃO</span></p>
+          </div>
+        </div>
+      </li>
+
+      <!-- 004 -->
+      <li class="projeto projeto--inverso" data-projeto>
+        <div class="projeto__link" data-cursor="PLATAFORMA">
+          <figure class="chapa" style="--p-bg:#101418; --p-ink:#EEF1F2; --p-accent:#636DFF">
+            <div class="chapa__quadro">
+              <div class="planta planta--sistema" aria-hidden="true">
+                <span class="planta__b planta__b--hero"></span>
+                <span class="planta__b planta__b--t1"></span>
+                <span class="planta__b planta__b--t2"></span>
+                <span class="planta__b planta__b--cta"></span>
+                <span class="planta__b planta__b--c1"></span>
+                <span class="planta__b planta__b--c2"></span>
+                <span class="planta__b planta__b--faixa"></span>
+                <span class="planta__eixo"></span>
+              </div>
+              <p class="chapa__nota mono" aria-hidden="true">SISTEMA <span>/</span> 004</p>
+              <ul class="chapa__cores mono" aria-label="Paleta do projeto">
+                <li><i class="var"></i>PALETA DEFINIDA POR MANDATO</li>
+              </ul>
+            </div>
+          </figure>
+
+          <div class="projeto__ficha">
+            <p class="mono projeto__id">SYSTEM <span aria-hidden="true">/</span> 004</p>
+            <h3 class="h3 projeto__nome">Plataforma de Mandato</h3>
+            <p class="projeto__seg mono">PRODUTO PROPRIETÁRIO — INSTITUCIONAL</p>
+            <ul class="projeto__servs mono">
+              <li>Digital Strategy</li>
+              <li>Design System</li>
+              <li>Development</li>
+            </ul>
+            <p class="projeto__ano mono">2026 <span class="tag">EM PRODUÇÃO</span></p>
+          </div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="rail">
+      <p class="trabalho__pe mono" data-reveal>
+        SELEÇÃO PARCIAL <span aria-hidden="true">•</span>
+        <a href="#contact">Solicite o portfólio completo ↗</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ O PROBLEMA (inverte) ═══════════════════════════════════════════ -->
+  <section class="secao problema s-light" aria-labelledby="t-problema">
+    <div class="rail">
+      <h2 class="h2 problema__h2" id="t-problema" data-linhas>
+        <span class="linha"><span>SEU SITE FALA</span></span>
+        <span class="linha"><span>ANTES DE VOCÊ.</span></span>
+      </h2>
+
+      <p class="mono problema__en" data-reveal>YOUR WEBSITE SPEAKS BEFORE YOU DO.</p>
+
+      <div class="problema__txt">
+        <p data-reveal style="--d:.1s">
+          O primeiro contato com uma empresa frequentemente acontece antes de uma
+          conversa, reunião ou proposta. Acontece através de uma tela.
+        </p>
+        <p data-reveal style="--d:.2s">
+          A pergunta não é se sua presença digital está dizendo alguma coisa.
+        </p>
+        <p class="problema__pergunta" data-reveal style="--d:.32s">
+          A pergunta é: <strong>ela está dizendo a coisa certa?</strong>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FILOSOFIA ══════════════════════════════════════════════════════ -->
+  <section class="secao filosofia" aria-labelledby="t-filosofia">
+    <div class="rail">
+      <div class="filosofia__grid">
+        <h2 class="h2" id="t-filosofia" data-linhas>
+          <span class="linha"><span>PERCEPTION</span></span>
+          <span class="linha"><span>IS PART OF</span></span>
+          <span class="linha"><span>THE PRODUCT.</span></span>
+        </h2>
+
+        <div class="filosofia__txt">
+          <p data-reveal>Design não é apenas estética. É percepção.</p>
+          <p data-reveal style="--d:.12s">
+            Cada escolha — tipografia, movimento, fotografia, hierarquia,
+            interação e ritmo — influencia a maneira como uma marca é percebida.
+          </p>
+        </div>
+      </div>
+
+      <blockquote class="destaque" data-reveal style="--d:.2s">
+        <p>We don't decorate businesses.<br><span class="destaque__b">We translate their value.</span></p>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- ══ 02 / CAPABILITIES ══════════════════════════════════════════════ -->
+  <section class="secao capacidades" id="services" aria-labelledby="t-serv">
+    <div class="rail">
+      <header class="secao__topo">
+        <p class="mono num-secao">02 <span aria-hidden="true">/</span> CAPABILITIES</p>
+        <h2 class="h2" id="t-serv" data-linhas>
+          <span class="linha"><span>WHAT WE DO.</span></span>
+        </h2>
+      </header>
+
+      <ul class="servicos" id="servicos">
+        <li class="servico" data-servico>
+          <button type="button" class="servico__cab" aria-expanded="false" aria-controls="s1">
+            <span class="mono servico__num">01</span>
+            <span class="servico__nome">DIGITAL STRATEGY</span>
+            <span class="servico__sinal" aria-hidden="true"><i></i><i></i></span>
+          </button>
+          <div class="servico__corpo" id="s1">
+            <div class="servico__corpo-in">
+              <p>Estratégia, arquitetura de informação, posicionamento digital e direção do projeto.</p>
+              <p class="mono servico__itens">POSICIONAMENTO / ARQUITETURA DE INFORMAÇÃO / DIREÇÃO DE PROJETO / NARRATIVA</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="servico" data-servico>
+          <button type="button" class="servico__cab" aria-expanded="false" aria-controls="s2">
+            <span class="mono servico__num">02</span>
+            <span class="servico__nome">WEB DESIGN</span>
+            <span class="servico__sinal" aria-hidden="true"><i></i><i></i></span>
+          </button>
+          <div class="servico__corpo" id="s2">
+            <div class="servico__corpo-in">
+              <p>UX, UI e direção visual para experiências digitais diferenciadas.</p>
+              <p class="mono servico__itens">UX / UI / DIREÇÃO VISUAL / SISTEMA TIPOGRÁFICO / DESIGN SYSTEM</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="servico" data-servico>
+          <button type="button" class="servico__cab" aria-expanded="false" aria-controls="s3">
+            <span class="mono servico__num">03</span>
+            <span class="servico__nome">DEVELOPMENT</span>
+            <span class="servico__sinal" aria-hidden="true"><i></i><i></i></span>
+          </button>
+          <div class="servico__corpo" id="s3">
+            <div class="servico__corpo-in">
+              <p>Desenvolvimento responsivo, rápido, preciso e orientado à experiência.</p>
+              <p class="mono servico__itens">FRONT-END / PERFORMANCE / RESPONSIVIDADE / ACESSIBILIDADE / SEO TÉCNICO</p>
+            </div>
+          </div>
+        </li>
+
+        <li class="servico" data-servico>
+          <button type="button" class="servico__cab" aria-expanded="false" aria-controls="s4">
+            <span class="mono servico__num">04</span>
+            <span class="servico__nome">DIGITAL EXPERIENCE</span>
+            <span class="servico__sinal" aria-hidden="true"><i></i><i></i></span>
+          </button>
+          <div class="servico__corpo" id="s4">
+            <div class="servico__corpo-in">
+              <p>Motion, microinterações e experiências que tornam a navegação memorável.</p>
+              <p class="mono servico__itens">MOTION / MICROINTERAÇÕES / TRANSIÇÕES / DIREÇÃO DE MOVIMENTO</p>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══ 03 / PROCESS ═══════════════════════════════════════════════════ -->
+  <section class="secao processo" aria-labelledby="t-proc">
+    <div class="rail">
+      <header class="secao__topo">
+        <p class="mono num-secao">03 <span aria-hidden="true">/</span> PROCESS</p>
+        <h2 class="h2" id="t-proc" data-linhas>
+          <span class="linha"><span>INTENTION</span></span>
+          <span class="linha"><span>BEFORE</span></span>
+          <span class="linha"><span>EXECUTION.</span></span>
+        </h2>
+      </header>
+
+      <ol class="etapas">
+        <li class="etapa" data-reveal>
+          <p class="mono etapa__num">01 <span aria-hidden="true">/</span> DISCOVER</p>
+          <p class="etapa__txt">Entender negócio, mercado, posicionamento, público e objetivos.</p>
+        </li>
+        <li class="etapa" data-reveal style="--d:.1s">
+          <p class="mono etapa__num">02 <span aria-hidden="true">/</span> DEFINE</p>
+          <p class="etapa__txt">Transformar informações em direção estratégica e estrutura digital.</p>
+        </li>
+        <li class="etapa" data-reveal style="--d:.2s">
+          <p class="mono etapa__num">03 <span aria-hidden="true">/</span> DESIGN</p>
+          <p class="etapa__txt">Traduzir estratégia em identidade visual, UX e experiência.</p>
+        </li>
+        <li class="etapa" data-reveal style="--d:.3s">
+          <p class="mono etapa__num">04 <span aria-hidden="true">/</span> BUILD</p>
+          <p class="etapa__txt">Transformar a direção aprovada em uma experiência digital funcional e precisa.</p>
+        </li>
+      </ol>
+
+      <p class="processo__frase" data-linhas>
+        <span class="linha"><span>Não começamos pelo layout.</span></span>
+        <span class="linha"><span>Começamos pelo que</span></span>
+        <span class="linha"><span>seu site precisa fazer</span></span>
+        <span class="linha"><span>as pessoas perceberem<i class="pt" aria-hidden="true">•</i></span></span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ══ DIFERENCIAL — THE ZENITH POINT ═════════════════════════════════ -->
+  <section class="convergencia" id="convergencia" aria-labelledby="t-conv">
+    <div class="convergencia__pista">
+      <div class="convergencia__palco" id="palco">
+        <div class="rail convergencia__in">
+
+          <p class="mono num-secao">THE ZENITH POINT</p>
+          <h2 class="sr" id="t-conv">A distância entre valor real e percepção digital</h2>
+
+          <div class="niveis" aria-hidden="true">
+            <div class="nivel nivel--alto">
+              <span class="nivel__fio"></span>
+              <span class="mono nivel__rot">REAL VALUE</span>
+            </div>
+
+            <div class="cota">
+              <span class="cota__seta cota__seta--cima"></span>
+              <span class="cota__fio"></span>
+              <span class="mono cota__delta">Δ <b id="conv-delta">42</b>%</span>
+              <span class="cota__seta cota__seta--baixo"></span>
+            </div>
+
+            <div class="nivel nivel--baixo">
+              <span class="nivel__fio"></span>
+              <span class="mono nivel__rot">DIGITAL PERCEPTION</span>
+            </div>
+
+            <span class="ponto-zenith" id="ponto-zenith">
+              <i class="ponto-zenith__halo"></i>
+              <i class="ponto-zenith__nucleo"></i>
+              <span class="mono ponto-zenith__rot">THE ZENITH POINT <i>•</i></span>
+            </span>
+          </div>
+
+          <p class="convergencia__txt">
+            Nosso trabalho é diminuir a distância entre o valor que sua empresa
+            possui e o valor que o público percebe.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CLIENTE IDEAL ══════════════════════════════════════════════════ -->
+  <section class="secao ideal" aria-labelledby="t-ideal">
+    <div class="rail">
+      <div class="ideal__grid">
+        <h2 class="h2" id="t-ideal" data-linhas>
+          <span class="linha"><span>FOR BUSINESSES</span></span>
+          <span class="linha"><span>THAT HAVE</span></span>
+          <span class="linha"><span>OUTGROWN THEIR</span></span>
+          <span class="linha"><span>WEBSITE.</span></span>
+        </h2>
+
+        <div class="ideal__txt">
+          <p class="mono ideal__pt" data-reveal>PARA EMPRESAS QUE CRESCERAM ALÉM DO PRÓPRIO SITE.</p>
+          <p data-reveal style="--d:.12s">
+            Trabalhamos melhor com empresas que já possuem algo valioso e
+            perceberam que sua presença digital deixou de representar o nível
+            que alcançaram.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ 04 / ABOUT ═════════════════════════════════════════════════════ -->
+  <section class="secao sobre" id="about" aria-labelledby="t-sobre">
+    <div class="rail">
+      <header class="secao__topo">
+        <p class="mono num-secao">04 <span aria-hidden="true">/</span> ABOUT</p>
+        <h2 class="h2" id="t-sobre" data-linhas>
+          <span class="linha"><span>ZENITH IS</span></span>
+          <span class="linha"><span>A POINT OF</span></span>
+          <span class="linha"><span>PERSPECTIVE.</span></span>
+        </h2>
+      </header>
+
+      <div class="sobre__grid">
+        <div class="sobre__txt">
+          <p data-reveal>
+            Zenith representa o ponto mais alto em relação ao observador.
+            Para nós, representa perspectiva.
+          </p>
+          <p data-reveal style="--d:.1s">
+            A Zenith Dias nasceu da ideia de que empresas extraordinárias não
+            deveriam parecer comuns no ambiente digital.
+          </p>
+          <p data-reveal style="--d:.2s">
+            Somos um estúdio independente dedicado a criar experiências digitais
+            onde estratégia, design e tecnologia trabalham com um único objetivo:
+            <strong>elevar percepção.</strong>
+          </p>
+        </div>
+
+        <dl class="sobre__ficha mono" data-reveal style="--d:.28s">
+          <div><dt>FOUNDED BY</dt><dd>GABRIEL DIAS</dd></div>
+          <div><dt>EST.</dt><dd>2026</dd></div>
+          <div><dt>BASE</dt><dd>SÃO PAULO — BR</dd></div>
+          <div><dt>ESCOPO</dt><dd>AVAILABLE WORLDWIDE</dd></div>
+          <div><dt>MODELO</dt><dd>ESTÚDIO INDEPENDENTE</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PÔSTER (inverte) ═══════════════════════════════════════════════ -->
+  <section class="poster s-light" aria-label="Seu digital à altura da sua marca">
+    <p class="poster__txt display" data-linhas>
+      <span class="linha"><span>SEU DIGITAL</span></span>
+      <span class="linha"><span>À ALTURA</span></span>
+      <span class="linha"><span>DA SUA MARCA.</span></span>
+    </p>
+    <span class="poster__pt" aria-hidden="true">•</span>
+  </section>
+
+  <!-- ══ CTA FINAL + FORMULÁRIO ═════════════════════════════════════════ -->
+  <section class="secao contato" id="contact" aria-labelledby="t-contato">
+    <div class="rail">
+      <p class="mono num-secao" data-reveal>HAVE A PROJECT?</p>
+
+      <h2 class="display contato__h2" id="t-contato" data-linhas>
+        <span class="linha"><span>VAMOS ELEVAR</span></span>
+        <span class="linha"><span>A SUA PRESENÇA.</span></span>
+      </h2>
+
+      <p class="lead contato__lead" data-reveal style="--d:.2s">
+        Se sua empresa evoluiu, talvez seja hora da sua presença digital acompanhar.
+      </p>
+
+      <div class="contato__grid">
+        <div class="canais" data-reveal style="--d:.28s">
+          <p class="mono canais__rot">CANAIS DIRETOS</p>
+          <ul class="canais__lista" id="canais-lista">
+            <!-- Preenchido por assets/js/main.js a partir do objeto CONTATO. -->
+          </ul>
+          <p class="mono canais__loc">SÃO PAULO — BRAZIL<br>AVAILABLE WORLDWIDE</p>
+        </div>
+
+        <form class="form" id="form" novalidate>
+          <p class="mono form__rot">BRIEFING INICIAL</p>
+
+          <div class="campo">
+            <label for="f-nome">Nome</label>
+            <input id="f-nome" name="nome" type="text" autocomplete="name" required>
+            <span class="campo__erro" data-erro-de="f-nome"></span>
+          </div>
+
+          <div class="campo">
+            <label for="f-empresa">Empresa</label>
+            <input id="f-empresa" name="empresa" type="text" autocomplete="organization">
+          </div>
+
+          <div class="campo">
+            <label for="f-email">E-mail</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+            <span class="campo__erro" data-erro-de="f-email"></span>
+          </div>
+
+          <div class="campo">
+            <label for="f-site">Site atual</label>
+            <input id="f-site" name="site" type="text" inputmode="url" placeholder="opcional">
+          </div>
+
+          <div class="campo">
+            <label for="f-objetivo">Qual é o principal objetivo do projeto?</label>
+            <textarea id="f-objetivo" name="objetivo" rows="2" required></textarea>
+            <span class="campo__erro" data-erro-de="f-objetivo"></span>
+          </div>
+
+          <fieldset class="fieldset">
+            <legend>Faixa de investimento</legend>
+            <div class="fichas">
+              <label class="ficha"><input type="radio" name="investimento" value="Até R$ 10 mil"><span>ATÉ R$ 10K</span></label>
+              <label class="ficha"><input type="radio" name="investimento" value="R$ 10 mil a R$ 25 mil"><span>R$ 10K — 25K</span></label>
+              <label class="ficha"><input type="radio" name="investimento" value="R$ 25 mil a R$ 50 mil"><span>R$ 25K — 50K</span></label>
+              <label class="ficha"><input type="radio" name="investimento" value="Acima de R$ 50 mil"><span>ACIMA DE R$ 50K</span></label>
+              <label class="ficha"><input type="radio" name="investimento" value="A definir" checked><span>A DEFINIR</span></label>
+            </div>
+          </fieldset>
+
+          <fieldset class="fieldset">
+            <legend>Quando pretende iniciar?</legend>
+            <div class="fichas">
+              <label class="ficha"><input type="radio" name="prazo" value="Imediatamente"><span>IMEDIATAMENTE</span></label>
+              <label class="ficha"><input type="radio" name="prazo" value="Em até 30 dias"><span>EM ATÉ 30 DIAS</span></label>
+              <label class="ficha"><input type="radio" name="prazo" value="Em até 90 dias"><span>EM ATÉ 90 DIAS</span></label>
+              <label class="ficha"><input type="radio" name="prazo" value="Ainda avaliando" checked><span>AINDA AVALIANDO</span></label>
+            </div>
+          </fieldset>
+
+          <div class="campo">
+            <label for="f-msg">Mensagem adicional</label>
+            <textarea id="f-msg" name="mensagem" rows="3"></textarea>
+          </div>
+
+          <button class="btn btn--forte form__enviar" type="submit" data-magnetico>
+            <span>SEND PROJECT REQUEST</span><i aria-hidden="true">↗</i>
+          </button>
+
+          <p class="form__status mono" id="form-status" role="status" aria-live="polite"></p>
+
+          <noscript>
+            <p class="form__status mono">
+              O envio deste formulário depende de JavaScript. Escreva direto para o e-mail listado ao lado.
+            </p>
+          </noscript>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ══ FOOTER ═══════════════════════════════════════════════════════════ -->
+<footer class="pe" aria-labelledby="t-pe">
+  <div class="rail">
+    <h2 class="sr" id="t-pe">Rodapé</h2>
+
+    <div class="pe__marca">
+      <p class="pe__word">ZENITH<span>DIAS</span></p>
+      <p class="pe__slogan">Presence, elevated<i class="pt" aria-hidden="true">•</i></p>
+    </div>
+
+    <div class="pe__cols">
+      <nav class="pe__col" aria-label="Navegação do rodapé">
+        <p class="mono pe__rot">NAVIGATION</p>
+        <ul>
+          <li><a href="#work">Work</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="pe__col">
+        <p class="mono pe__rot">SOCIAL</p>
+        <ul id="pe-social">
+          <!-- Preenchido por main.js a partir do objeto CONTATO. -->
+        </ul>
+      </div>
+
+      <div class="pe__col">
+        <p class="mono pe__rot">STUDIO</p>
+        <ul>
+          <li>São Paulo — Brazil</li>
+          <li>Available worldwide</li>
+          <li>Independent digital studio</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pe__base mono">
+      <p>© ZENITH DIAS 2026 <span aria-hidden="true">—</span> ALL RIGHTS RESERVED</p>
+      <p class="pe__zp">THE ZENITH POINT <i class="pt" aria-hidden="true">•</i></p>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>

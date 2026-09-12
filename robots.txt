@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Sitemap: adicionar quando o domínio definitivo existir (PENDENCIAS.md, item 03)

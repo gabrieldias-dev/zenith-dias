@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#090A0C"/>
+  <!-- eixo ascendente -->
+  <path d="M16 26 V13" stroke="#F1F0EB" stroke-width="1.6" stroke-linecap="square"/>
+  <!-- the zenith point -->
+  <circle cx="16" cy="8.5" r="3" fill="#636DFF"/>
+</svg>

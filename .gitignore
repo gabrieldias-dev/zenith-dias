@@ -1,0 +1,15 @@
+# Documentos internos de trabalho — ficam no disco, fora do repositório público.
+# PENDENCIAS.md traz notas de cliente (inclusive um sob confidencialidade) e
+# decisões comerciais ainda não fechadas; PRODUCT.md traz curadoria pendente
+# de aval; o prompt é o documento de estratégia do estúdio.
+PENDENCIAS.md
+PRODUCT.md
+Prompt completo — Site Zenith Dias.md
+
+# Ferramentas locais
+.impeccable/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store

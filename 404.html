@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090A0C">
+<title>404 — Zenith Dias</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@300..500&display=swap">
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+  .erro {
+    min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: var(--secao-y) var(--gutter);
+    max-width: var(--max); margin-inline: auto; width: 100%;
+  }
+  .erro__cod { margin-bottom: clamp(1.5rem, 4vh, 2.5rem); }
+  .erro__h1 { margin-bottom: clamp(1.5rem, 4vh, 2.5rem); max-width: 18ch; }
+  .erro__txt { margin-bottom: clamp(2rem, 5vh, 3rem); }
+  .erro__marca { position: absolute; top: clamp(1rem, 2.2vh, 1.5rem); left: var(--gutter); }
+</style>
+</head>
+<body class="s-dark">
+<main class="erro">
+  <a class="marca erro__marca" href="/zenith-dias/">
+    <span class="marca__z">ZENITH</span><span class="marca__d">DIAS</span><span class="marca__p" aria-hidden="true">&bull;</span>
+  </a>
+
+  <p class="mono erro__cod">ERROR / 404 &mdash; PAGE NOT FOUND</p>
+
+  <h1 class="display erro__h1">ESSA P&Aacute;GINA N&Atilde;O EXISTE.</h1>
+
+  <p class="lead erro__txt">
+    O endere&ccedil;o que voc&ecirc; abriu n&atilde;o corresponde a nenhuma p&aacute;gina do estúdio.
+  </p>
+
+  <p><a class="btn btn--forte" href="/zenith-dias/"><span>Voltar ao in&iacute;cio</span><i aria-hidden="true">&#8599;</i></a></p>
+</main>
+</body>
+</html>
