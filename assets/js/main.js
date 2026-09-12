@@ -99,11 +99,23 @@
   }
 
   /* ══ 03 REVEAL ══════════════════════════════════════════════════════════ */
+
+  /* Estado final de tudo, sem animação. É a rede de segurança: conteúdo
+     escondido em opacity 0 esperando um observador que nunca veio é a pior
+     falha possível deste site — a página fica em branco. */
+  var observadorAtivo = false;
+
+  function mostraTudo() {
+    qa('[data-reveal], [data-linhas], [data-palavras]').forEach(function (el) {
+      el.classList.add('is-in');
+    });
+  }
+
   function reveals() {
     var alvos = qa('[data-reveal], [data-linhas], [data-palavras]');
 
     if (!('IntersectionObserver' in window)) {
-      alvos.forEach(function (el) { el.classList.add('is-in'); });
+      mostraTudo();
       return;
     }
 
@@ -117,6 +129,7 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
     alvos.forEach(function (el) { obs.observe(el); });
+    observadorAtivo = true;
   }
 
   /* ══ 04 SCROLL — um laço só ═════════════════════════════════════════════ */
@@ -525,27 +538,47 @@
 
   /* ══ PARTIDA ════════════════════════════════════════════════════════════ */
   function inicia() {
-    fatiaPalavras();
-    canais();
-    servicos();
-    menu();
-    form();
-    scroll();
-    navAtual();
-    cursor();
-    magnetismo();
-    plantas();
+    /* Cada módulo é isolado: um erro em qualquer um deles não pode impedir os
+       reveals de rodar, senão a página inteira fica invisível. */
+    [fatiaPalavras, canais, servicos, menu, form, scroll, navAtual,
+     cursor, magnetismo, plantas].forEach(function (modulo) {
+      try { modulo(); } catch (e) {
+        if (window.console) console.error('[zenith] módulo falhou:', e);
+      }
+    });
 
     // Os reveals esperam o loader, para o hero entrar depois da transição.
-    if (html.classList.contains('is-ready')) reveals();
-    else {
+    var iniciado = false;
+    function revelaUmaVez() {
+      if (iniciado) return true;
+      if (!html.classList.contains('is-ready')) return false;
+      iniciado = true;
+      try { reveals(); } catch (e) { mostraTudo(); }
+      return true;
+    }
+
+    if (!revelaUmaVez()) {
+      var voltas = 0;
       var esperando = setInterval(function () {
-        if (html.classList.contains('is-ready')) { clearInterval(esperando); reveals(); }
+        // 80 voltas ≈ 4,8s: nunca esperar o loader para sempre.
+        if (revelaUmaVez() || ++voltas > 80) {
+          clearInterval(esperando);
+          if (!iniciado) { iniciado = true; mostraTudo(); }
+        }
       }, 60);
     }
+
+    // Rede final: se o observador nunca chegou a existir, entrega o conteúdo.
+    setTimeout(function () { if (!observadorAtivo) mostraTudo(); }, 6000);
   }
 
-  loader();
+  try { loader(); } catch (e) {
+    // Sem loader o site é apenas menos cerimonioso; travado ele é inutilizável.
+    html.classList.add('is-ready');
+    html.classList.remove('is-travado');
+    var restos = document.getElementById('loader');
+    if (restos && restos.parentNode) restos.parentNode.removeChild(restos);
+  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', inicia);
