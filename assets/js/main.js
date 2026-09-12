@@ -48,7 +48,7 @@
     function passo() {
       var v = passos[i];
       num.textContent = v === 100 ? '100' : doisDig(v);
-      fio.style.width = v + '%';
+      fio.style.setProperty('--v', v / 100);   // scaleX, não width
       if (v === 100) {
         // 100• — o contador termina no Zenith Point.
         var pt = document.createElement('span');

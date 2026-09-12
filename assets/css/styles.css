@@ -298,10 +298,14 @@ html.sem-loader .loader { display: none; }
   width: clamp(7rem, 24vw, 14rem); height: 1px;
   background: rgba(241, 240, 235, .18);
 }
+/* Preenche por scaleX, não por width: largura anima layout, transform não.
+   O JS escreve --v de 0 a 1. */
 .loader__fio {
   position: absolute; inset: 0 auto 0 0;
-  width: 0%; background: var(--lunar-white);
-  transition: width .32s var(--e-io);
+  width: 100%; background: var(--lunar-white);
+  transform: scaleX(var(--v, 0));
+  transform-origin: left center;
+  transition: transform .32s var(--e-io);
 }
 
 /* ── 08 CURSOR ────────────────────────────────────────────────────────── */
@@ -323,15 +327,18 @@ html.sem-loader .loader { display: none; }
     transform: translate3d(var(--cx, -100px), var(--cy, -100px), 0);
     will-change: transform;
   }
+  /* Base fixa de 8px, centrada na ponta do cursor. Os estados mudam só a
+     escala: width/height/margin animavam layout a cada hover, num elemento
+     que já é repintado a cada frame seguindo o mouse. A escala não-uniforme
+     do estado de texto transforma o círculo num traço vertical. */
   .cursor__anel {
     position: absolute; top: 0; left: 0;
-    width: var(--tam, 8px); height: var(--tam, 8px);
-    margin: calc(var(--tam, 8px) / -2) 0 0 calc(var(--tam, 8px) / -2);
+    width: 8px; height: 8px; margin: -4px 0 0 -4px;
     border-radius: 50%;
     background: #fff;
-    transition: width .38s var(--e-out), height .38s var(--e-out),
-                margin .38s var(--e-out), background .38s var(--e-out),
-                border-color .38s var(--e-out);
+    transform: scale(var(--sx, 1), var(--sy, 1));
+    transition: transform .38s var(--e-out), background .38s var(--e-out);
+    will-change: transform;
   }
   .cursor__rotulo {
     position: absolute; top: 0; left: 0;
@@ -341,13 +348,12 @@ html.sem-loader .loader { display: none; }
     white-space: nowrap; color: #fff;
     opacity: 0; transition: opacity .28s var(--e-out);
   }
-  /* estados */
-  .cursor.em-link  .cursor__anel { --tam: 26px; }
-  .cursor.em-chapa .cursor__anel { --tam: 74px; background: rgba(255,255,255,.92); }
+  /* estados — escala sobre a base de 8px: 26px, 74px, e 2×22px no texto */
+  .cursor.em-link  .cursor__anel { --sx: 3.25; --sy: 3.25; background: rgba(255,255,255,.9); }
+  .cursor.em-chapa .cursor__anel { --sx: 9.25; --sy: 9.25; background: rgba(255,255,255,.92); }
+  .cursor.em-texto .cursor__anel { --sx: .25;  --sy: 2.75; }
   .cursor.em-chapa .cursor__rotulo,
   .cursor.em-link  .cursor__rotulo { opacity: 1; }
-  .cursor.em-link  .cursor__anel { background: rgba(255,255,255,.9); }
-  .cursor.em-texto .cursor__anel { --tam: 2px; height: 22px; margin-top: -11px; border-radius: 0; }
   .cursor.em-chapa .cursor__rotulo { color: var(--zenith-black); mix-blend-mode: normal; }
 }
 
