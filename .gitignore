@@ -13,3 +13,11 @@ Prompt completo — Site Zenith Dias.md
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Páginas de comparação para decisão visual. Ferramenta local, não é o site.
+estudos/
+
+# Kit da identidade: material-fonte da marca (brandbook, masters de logo em
+# todas as variantes, fontes). O site usa apenas os derivados já em assets/,
+# então o kit fica no disco em vez de público no repositório.
+ZENITH_DIAS_Kit_Final/

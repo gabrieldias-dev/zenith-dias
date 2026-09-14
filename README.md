@@ -5,10 +5,13 @@ dependência de pacote. Abrir `index.html` já funciona.
 
 ```
 index.html               página única
-assets/css/styles.css    sistema visual (27 blocos numerados)
+assets/css/styles.css    sistema visual (tokens no bloco 01)
 assets/js/main.js        comportamento (12 módulos; CONTATO no topo)
-assets/favicon.svg       eixo + Zenith Point
+assets/fonts/            Inter Display e Inter (WOFF2, do kit)
+assets/img/logo/         assinaturas oficiais em SVG
+assets/favicon.svg       marca reduzida ZD
 robots.txt  404.html     arquivos de publicação
+ZENITH_DIAS_Kit_Final/   identidade oficial — NÃO editar
 PRODUCT.md               o que o site é e as regras do projeto
 DESIGN.md                decisões visuais, com os números medidos
 PENDENCIAS.md            o que falta você me mandar
@@ -42,10 +45,20 @@ seu.
 
 ## Ao mexer em qualquer headline
 
-As quebras de linha são escritas à mão no HTML, porque a máscara anima linha
-por linha. Se uma linha deixar de caber, ela **re-quebra dentro da máscara** —
-e isso não aparece em teste de estouro, porque o texto embrulha em vez de
-vazar. Rodar no console, em várias larguras:
+As quebras são escritas à mão no HTML, uma **frase por linha**, porque a
+máscara anima por bloco.
+
+Duas regras diferentes, e confundir as duas é o erro fácil:
+
+- **No desktop nada pode embrulhar.** Se uma frase deixar de caber, ela
+  re-quebra dentro da máscara — e isso **não** aparece em teste de estouro,
+  porque o texto embrulha em vez de vazar.
+- **No mobile embrulhar é o comportamento certo.** A escala do brandbook fixa
+  o H1 em 40px no celular; frase nenhuma cabe em uma linha a esse tamanho.
+  A máscara anima o bloco inteiro, sem corte. Não tente consertar reduzindo a
+  tipografia: isso desobedeceria o kit.
+
+Para checar o desktop, rodar no console em 1024, 1280, 1440 e 1680:
 
 ```js
 [...document.querySelectorAll('[data-linhas] .linha > span')]
@@ -57,9 +70,8 @@ vazar. Rodar no console, em várias larguras:
   .map(s => s.textContent.trim());
 ```
 
-Array vazio = tudo certo. Qualquer item na lista precisa de **nova quebra de
-linha**, não de tipografia menor. Testado limpo em 320 · 360 · 375 · 414 ·
-768 · 1024 · 1280 · 1440 · 1680.
+Array vazio = tudo certo **no desktop**. Item na lista pede reescrita da
+frase, não tipografia menor. Verificado limpo em 1024 · 1280 · 1440 · 1680.
 
 ## Trocar as plantas por capturas reais
 

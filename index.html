@@ -25,9 +25,11 @@
 <meta name="twitter:description" content="Transformamos presença digital em percepção de valor.">
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@300..500&display=swap">
+
+<!-- Fontes oficiais do kit, auto-hospedadas. As duas que pintam a primeira
+     tela vão em preload; as outras duas chegam pelo CSS. -->
+<link rel="preload" href="assets/fonts/InterDisplay-Medium.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Inter-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/styles.css">
 
 <script>
@@ -67,9 +69,8 @@
 
 <!-- ══ EXPERIÊNCIA INICIAL ══════════════════════════════════════════════ -->
 <div class="loader" id="loader" aria-hidden="true">
-  <div class="loader__marca">
-    <span class="loader__nome">ZENITH</span><span class="loader__ponto">•</span>
-  </div>
+  <img class="loader__marca" src="assets/img/logo/principal-negativa.svg" alt=""
+       width="787" height="300" fetchpriority="high">
   <div class="loader__medidor">
     <span class="loader__num" id="loader-num">00</span>
     <span class="loader__trilho"><span class="loader__fio" id="loader-fio"></span></span>
@@ -98,8 +99,13 @@
 <!-- ══ HEADER ═══════════════════════════════════════════════════════════ -->
 <header class="cabeca" id="cabeca">
   <div class="cabeca__in">
+    <!-- Assinatura horizontal no desktop (mínimo 180px do brandbook) e marca
+         reduzida ZD no mobile, que é exatamente o uso previsto para ela. -->
     <a class="marca" href="#hero" aria-label="Zenith Dias — início">
-      <span class="marca__z">ZENITH</span><span class="marca__d">DIAS</span><span class="marca__p" aria-hidden="true">•</span>
+      <img class="marca__larga" src="assets/img/logo/horizontal-negativa.svg"
+           alt="" width="1204" height="176">
+      <img class="marca__zd" src="assets/img/logo/reduzida-negativa.svg"
+           alt="" width="294" height="175">
     </a>
 
     <nav class="nav" aria-label="Navegação principal">
@@ -129,8 +135,8 @@
     <a href="#contact"><em>04</em><span>CONTACT</span></a>
   </nav>
   <div class="menu__pe">
-    <p class="mono">SÃO PAULO — BRAZIL<br>AVAILABLE WORLDWIDE</p>
-    <p class="mono">PRESENCE, ELEVATED<span class="pt">•</span></p>
+    <p class="rotulo">SÃO PAULO — BRAZIL<br>AVAILABLE WORLDWIDE</p>
+    <p class="rotulo">PRESENCE, ELEVATED<span class="pt" aria-hidden="true">•</span></p>
   </div>
 </div>
 
@@ -141,24 +147,21 @@
     <div class="hero__grade" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
     <div class="hero__in">
-      <p class="mono hero__eyebrow" data-reveal>
+      <p class="rotulo hero__eyebrow" data-reveal>
         INDEPENDENT DIGITAL STUDIO <span class="pt" aria-hidden="true">•</span> EST. / 2026
       </p>
 
+      <!-- Uma linha por FRASE, como no exemplo do brandbook (pág. 11).
+           Com H1 em 64px, quatro linhas curtas viravam uma coluna estreita e
+           fraca; e quebrar por linha visual não sobrevive ao mobile, onde a
+           escala oficial é 40px. Quebrar por frase sobrevive aos dois. -->
       <h1 class="display hero__h1" data-linhas>
-        <span class="linha"><span>SUA EMPRESA</span></span>
-        <span class="linha"><span>EVOLUIU.</span></span>
-        <span class="linha linha--dim"><span>SEU DIGITAL</span></span>
-        <span class="linha linha--dim"><span>TAMBÉM DEVERIA.</span></span>
+        <span class="linha"><span>SUA EMPRESA EVOLUIU.</span></span>
+        <span class="linha linha--dim"><span>SEU DIGITAL TAMBÉM DEVERIA.</span></span>
       </h1>
 
       <div class="hero__base">
-        <p class="lead hero__lead" data-reveal style="--d:.55s">
-          Criamos sites estratégicos e experiências digitais para marcas
-          que querem ser percebidas à altura do que entregam.
-        </p>
-
-        <div class="hero__acoes" data-reveal style="--d:.68s">
+        <div class="hero__acoes" data-reveal style="--d:.55s">
           <a class="btn btn--forte" href="#work" data-magnetico>
             <span>Conheça nossos projetos</span><i aria-hidden="true">↘</i>
           </a>
@@ -169,18 +172,18 @@
       </div>
     </div>
 
-    <div class="hero__meta hero__meta--esq mono" data-reveal style="--d:.8s">
+    <div class="hero__meta hero__meta--esq rotulo" data-reveal style="--d:.66s">
       <span>ZENITH DIAS</span>
       <span>SÃO PAULO — BRAZIL</span>
       <span>AVAILABLE WORLDWIDE</span>
     </div>
 
-    <div class="hero__meta hero__meta--dir mono" data-reveal style="--d:.86s">
+    <div class="hero__meta hero__meta--dir rotulo" data-reveal style="--d:.72s">
       <span>STRATEGY / DESIGN / TECHNOLOGY</span>
       <span class="hero__slogan">Presence, elevated<i class="pt" aria-hidden="true">•</i></span>
     </div>
 
-    <div class="scroll-ind mono" data-reveal style="--d:.92s" aria-hidden="true">
+    <div class="scroll-ind rotulo" data-reveal style="--d:.78s" aria-hidden="true">
       <span>SCROLL</span>
       <span class="scroll-ind__fio"><i></i></span>
       <span>01</span>
@@ -205,7 +208,7 @@
             digitais capazes de representar negócios com mais clareza, presença
             e autoridade.
           </p>
-          <p class="mono manifesto__tag" data-reveal style="--d:.24s">
+          <p class="rotulo manifesto__tag" data-reveal style="--d:.24s">
             PERCEPÇÃO <span aria-hidden="true">/</span> ESTRATÉGIA <span aria-hidden="true">/</span> PRESENÇA
           </p>
         </div>
@@ -229,7 +232,7 @@
   <section class="secao trabalho" id="work" aria-labelledby="t-work">
     <div class="rail">
       <header class="secao__topo">
-        <p class="mono num-secao">01 <span aria-hidden="true">/</span> SELECTED WORK</p>
+        <p class="rotulo num-secao">01 <span aria-hidden="true">/</span> SELECTED WORK</p>
         <h2 class="h2" id="t-work" data-linhas>
           <span class="linha"><span>WORK THAT</span></span>
           <span class="linha"><span>SPEAKS BEFORE</span></span>
@@ -257,8 +260,8 @@
                 <span class="planta__b planta__b--faixa"></span>
                 <span class="planta__eixo"></span>
               </div>
-              <p class="chapa__nota mono" aria-hidden="true">LAYOUT <span>/</span> 001</p>
-              <ul class="chapa__cores mono" aria-label="Paleta do projeto">
+              <p class="chapa__nota rotulo" aria-hidden="true">LAYOUT <span>/</span> 001</p>
+              <ul class="chapa__cores rotulo" aria-label="Paleta do projeto">
                 <li><i style="background:#0a0908"></i>#0A0908</li>
                 <li><i style="background:#f2efe9"></i>#F2EFE9</li>
                 <li><i style="background:#fea224"></i>#FEA224</li>
@@ -267,15 +270,15 @@
           </figure>
 
           <div class="projeto__ficha">
-            <p class="mono projeto__id">PROJECT <span aria-hidden="true">/</span> 001</p>
+            <p class="rotulo projeto__id">PROJECT <span aria-hidden="true">/</span> 001</p>
             <h3 class="h3 projeto__nome">Pernil<span class="amp">&amp;</span>Co.</h3>
-            <p class="projeto__seg mono">FOOD SERVICE — EVENTOS E CORPORATIVO</p>
-            <ul class="projeto__servs mono">
+            <p class="projeto__seg rotulo">FOOD SERVICE — EVENTOS E CORPORATIVO</p>
+            <ul class="projeto__servs rotulo">
               <li>Web Design</li>
               <li>Development</li>
               <li>Digital Experience</li>
             </ul>
-            <p class="projeto__ano mono">2026 <span class="tag tag--live">NO AR</span></p>
+            <p class="projeto__ano rotulo">2026 <span class="tag tag--live">NO AR</span></p>
           </div>
         </a>
       </li>
@@ -295,8 +298,8 @@
                 <span class="planta__b planta__b--faixa"></span>
                 <span class="planta__eixo"></span>
               </div>
-              <p class="chapa__nota mono" aria-hidden="true">LAYOUT <span>/</span> 002</p>
-              <ul class="chapa__cores mono" aria-label="Paleta do projeto">
+              <p class="chapa__nota rotulo" aria-hidden="true">LAYOUT <span>/</span> 002</p>
+              <ul class="chapa__cores rotulo" aria-label="Paleta do projeto">
                 <li><i style="background:#0d103f"></i>#0D103F</li>
                 <li><i style="background:#f7f2e9"></i>#F7F2E9</li>
                 <li><i style="background:#c9a55d"></i>#C9A55D</li>
@@ -305,15 +308,15 @@
           </figure>
 
           <div class="projeto__ficha">
-            <p class="mono projeto__id">PROJECT <span aria-hidden="true">/</span> 002</p>
+            <p class="rotulo projeto__id">PROJECT <span aria-hidden="true">/</span> 002</p>
             <h3 class="h3 projeto__nome">Setti Confeitaria</h3>
-            <p class="projeto__seg mono">CONFEITARIA AUTORAL — ENCOMENDA</p>
-            <ul class="projeto__servs mono">
+            <p class="projeto__seg rotulo">CONFEITARIA AUTORAL — ENCOMENDA</p>
+            <ul class="projeto__servs rotulo">
               <li>Digital Strategy</li>
               <li>Web Design</li>
               <li>Development</li>
             </ul>
-            <p class="projeto__ano mono">2026 <span class="tag">EM PRODUÇÃO</span></p>
+            <p class="projeto__ano rotulo">2026 <span class="tag">EM PRODUÇÃO</span></p>
           </div>
         </div>
       </li>
@@ -333,8 +336,8 @@
                 <span class="planta__b planta__b--faixa"></span>
                 <span class="planta__eixo"></span>
               </div>
-              <p class="chapa__nota mono" aria-hidden="true">LAYOUT <span>/</span> 003</p>
-              <ul class="chapa__cores mono" aria-label="Paleta do projeto">
+              <p class="chapa__nota rotulo" aria-hidden="true">LAYOUT <span>/</span> 003</p>
+              <ul class="chapa__cores rotulo" aria-label="Paleta do projeto">
                 <li><i style="background:#0F1417"></i>#0F1417</li>
                 <li><i style="background:#E9EDEC"></i>#E9EDEC</li>
                 <li><i style="background:#256F73"></i>#256F73</li>
@@ -343,15 +346,15 @@
           </figure>
 
           <div class="projeto__ficha">
-            <p class="mono projeto__id">PROJECT <span aria-hidden="true">/</span> 003</p>
+            <p class="rotulo projeto__id">PROJECT <span aria-hidden="true">/</span> 003</p>
             <h3 class="h3 projeto__nome">Escritório de Advocacia</h3>
-            <p class="projeto__seg mono">DIREITO — CLIENTE SOB CONFIDENCIALIDADE</p>
-            <ul class="projeto__servs mono">
+            <p class="projeto__seg rotulo">DIREITO — CLIENTE SOB CONFIDENCIALIDADE</p>
+            <ul class="projeto__servs rotulo">
               <li>Digital Strategy</li>
               <li>Web Design</li>
               <li>Development</li>
             </ul>
-            <p class="projeto__ano mono">2026 <span class="tag">EM PRODUÇÃO</span></p>
+            <p class="projeto__ano rotulo">2026 <span class="tag">EM PRODUÇÃO</span></p>
           </div>
         </div>
       </li>
@@ -371,30 +374,30 @@
                 <span class="planta__b planta__b--faixa"></span>
                 <span class="planta__eixo"></span>
               </div>
-              <p class="chapa__nota mono" aria-hidden="true">SISTEMA <span>/</span> 004</p>
-              <ul class="chapa__cores mono" aria-label="Paleta do projeto">
+              <p class="chapa__nota rotulo" aria-hidden="true">SISTEMA <span>/</span> 004</p>
+              <ul class="chapa__cores rotulo" aria-label="Paleta do projeto">
                 <li><i class="var"></i>PALETA DEFINIDA POR MANDATO</li>
               </ul>
             </div>
           </figure>
 
           <div class="projeto__ficha">
-            <p class="mono projeto__id">SYSTEM <span aria-hidden="true">/</span> 004</p>
+            <p class="rotulo projeto__id">SYSTEM <span aria-hidden="true">/</span> 004</p>
             <h3 class="h3 projeto__nome">Plataforma de Mandato</h3>
-            <p class="projeto__seg mono">PRODUTO PROPRIETÁRIO — INSTITUCIONAL</p>
-            <ul class="projeto__servs mono">
+            <p class="projeto__seg rotulo">PRODUTO PROPRIETÁRIO — INSTITUCIONAL</p>
+            <ul class="projeto__servs rotulo">
               <li>Digital Strategy</li>
               <li>Design System</li>
               <li>Development</li>
             </ul>
-            <p class="projeto__ano mono">2026 <span class="tag">EM PRODUÇÃO</span></p>
+            <p class="projeto__ano rotulo">2026 <span class="tag">EM PRODUÇÃO</span></p>
           </div>
         </div>
       </li>
     </ol>
 
     <div class="rail">
-      <p class="trabalho__pe mono" data-reveal>
+      <p class="trabalho__pe rotulo" data-reveal>
         SELEÇÃO PARCIAL <span aria-hidden="true">•</span>
         <a href="#contact">Solicite o portfólio completo ↗</a>
       </p>
@@ -409,7 +412,7 @@
         <span class="linha"><span>ANTES DE VOCÊ.</span></span>
       </h2>
 
-      <p class="mono problema__en" data-reveal>YOUR WEBSITE SPEAKS BEFORE YOU DO.</p>
+      <p class="rotulo problema__en" data-reveal>YOUR WEBSITE SPEAKS BEFORE YOU DO.</p>
 
       <div class="problema__txt">
         <p data-reveal style="--d:.1s">
@@ -455,7 +458,7 @@
   <section class="secao capacidades" id="services" aria-labelledby="t-serv">
     <div class="rail">
       <header class="secao__topo">
-        <p class="mono num-secao">02 <span aria-hidden="true">/</span> CAPABILITIES</p>
+        <p class="rotulo num-secao">02 <span aria-hidden="true">/</span> CAPABILITIES</p>
         <h2 class="h2" id="t-serv" data-linhas>
           <span class="linha"><span>WHAT WE DO.</span></span>
         </h2>
@@ -464,56 +467,56 @@
       <ul class="servicos" id="servicos">
         <li class="servico" data-servico>
           <button type="button" class="servico__cab" aria-expanded="false" aria-controls="s1">
-            <span class="mono servico__num">01</span>
+            <span class="rotulo servico__num">01</span>
             <span class="servico__nome">DIGITAL STRATEGY</span>
             <span class="servico__sinal" aria-hidden="true"><i></i><i></i></span>
           </button>
           <div class="servico__corpo" id="s1">
             <div class="servico__corpo-in">
               <p>Estratégia, arquitetura de informação, posicionamento digital e direção do projeto.</p>
-              <p class="mono servico__itens">POSICIONAMENTO / ARQUITETURA DE INFORMAÇÃO / DIREÇÃO DE PROJETO / NARRATIVA</p>
+              <p class="rotulo servico__itens">POSICIONAMENTO / ARQUITETURA DE INFORMAÇÃO / DIREÇÃO DE PROJETO / NARRATIVA</p>
             </div>
           </div>
         </li>
 
         <li class="servico" data-servico>
           <button type="button" class="servico__cab" aria-expanded="false" aria-controls="s2">
-            <span class="mono servico__num">02</span>
+            <span class="rotulo servico__num">02</span>
             <span class="servico__nome">WEB DESIGN</span>
             <span class="servico__sinal" aria-hidden="true"><i></i><i></i></span>
           </button>
           <div class="servico__corpo" id="s2">
             <div class="servico__corpo-in">
               <p>UX, UI e direção visual para experiências digitais diferenciadas.</p>
-              <p class="mono servico__itens">UX / UI / DIREÇÃO VISUAL / SISTEMA TIPOGRÁFICO / DESIGN SYSTEM</p>
+              <p class="rotulo servico__itens">UX / UI / DIREÇÃO VISUAL / SISTEMA TIPOGRÁFICO / DESIGN SYSTEM</p>
             </div>
           </div>
         </li>
 
         <li class="servico" data-servico>
           <button type="button" class="servico__cab" aria-expanded="false" aria-controls="s3">
-            <span class="mono servico__num">03</span>
+            <span class="rotulo servico__num">03</span>
             <span class="servico__nome">DEVELOPMENT</span>
             <span class="servico__sinal" aria-hidden="true"><i></i><i></i></span>
           </button>
           <div class="servico__corpo" id="s3">
             <div class="servico__corpo-in">
               <p>Desenvolvimento responsivo, rápido, preciso e orientado à experiência.</p>
-              <p class="mono servico__itens">FRONT-END / PERFORMANCE / RESPONSIVIDADE / ACESSIBILIDADE / SEO TÉCNICO</p>
+              <p class="rotulo servico__itens">FRONT-END / PERFORMANCE / RESPONSIVIDADE / ACESSIBILIDADE / SEO TÉCNICO</p>
             </div>
           </div>
         </li>
 
         <li class="servico" data-servico>
           <button type="button" class="servico__cab" aria-expanded="false" aria-controls="s4">
-            <span class="mono servico__num">04</span>
+            <span class="rotulo servico__num">04</span>
             <span class="servico__nome">DIGITAL EXPERIENCE</span>
             <span class="servico__sinal" aria-hidden="true"><i></i><i></i></span>
           </button>
           <div class="servico__corpo" id="s4">
             <div class="servico__corpo-in">
               <p>Motion, microinterações e experiências que tornam a navegação memorável.</p>
-              <p class="mono servico__itens">MOTION / MICROINTERAÇÕES / TRANSIÇÕES / DIREÇÃO DE MOVIMENTO</p>
+              <p class="rotulo servico__itens">MOTION / MICROINTERAÇÕES / TRANSIÇÕES / DIREÇÃO DE MOVIMENTO</p>
             </div>
           </div>
         </li>
@@ -525,7 +528,7 @@
   <section class="secao processo" aria-labelledby="t-proc">
     <div class="rail">
       <header class="secao__topo">
-        <p class="mono num-secao">03 <span aria-hidden="true">/</span> PROCESS</p>
+        <p class="rotulo num-secao">03 <span aria-hidden="true">/</span> PROCESS</p>
         <h2 class="h2" id="t-proc" data-linhas>
           <span class="linha"><span>INTENTION</span></span>
           <span class="linha"><span>BEFORE</span></span>
@@ -535,19 +538,19 @@
 
       <ol class="etapas">
         <li class="etapa" data-reveal>
-          <p class="mono etapa__num">01 <span aria-hidden="true">/</span> DISCOVER</p>
+          <p class="rotulo etapa__num">01 <span aria-hidden="true">/</span> DISCOVER</p>
           <p class="etapa__txt">Entender negócio, mercado, posicionamento, público e objetivos.</p>
         </li>
         <li class="etapa" data-reveal style="--d:.1s">
-          <p class="mono etapa__num">02 <span aria-hidden="true">/</span> DEFINE</p>
+          <p class="rotulo etapa__num">02 <span aria-hidden="true">/</span> DEFINE</p>
           <p class="etapa__txt">Transformar informações em direção estratégica e estrutura digital.</p>
         </li>
         <li class="etapa" data-reveal style="--d:.2s">
-          <p class="mono etapa__num">03 <span aria-hidden="true">/</span> DESIGN</p>
+          <p class="rotulo etapa__num">03 <span aria-hidden="true">/</span> DESIGN</p>
           <p class="etapa__txt">Traduzir estratégia em identidade visual, UX e experiência.</p>
         </li>
         <li class="etapa" data-reveal style="--d:.3s">
-          <p class="mono etapa__num">04 <span aria-hidden="true">/</span> BUILD</p>
+          <p class="rotulo etapa__num">04 <span aria-hidden="true">/</span> BUILD</p>
           <p class="etapa__txt">Transformar a direção aprovada em uma experiência digital funcional e precisa.</p>
         </li>
       </ol>
@@ -567,31 +570,31 @@
       <div class="convergencia__palco" id="palco">
         <div class="rail convergencia__in">
 
-          <p class="mono num-secao">THE ZENITH POINT</p>
+          <p class="rotulo num-secao">THE ZENITH POINT</p>
           <h2 class="sr" id="t-conv">A distância entre valor real e percepção digital</h2>
 
           <div class="niveis" aria-hidden="true">
             <div class="nivel nivel--alto">
               <span class="nivel__fio"></span>
-              <span class="mono nivel__rot">REAL VALUE</span>
+              <span class="rotulo nivel__rot">REAL VALUE</span>
             </div>
 
             <div class="cota">
               <span class="cota__seta cota__seta--cima"></span>
               <span class="cota__fio"></span>
-              <span class="mono cota__delta">Δ <b id="conv-delta">42</b>%</span>
+              <span class="rotulo cota__delta">Δ <b id="conv-delta">42</b>%</span>
               <span class="cota__seta cota__seta--baixo"></span>
             </div>
 
             <div class="nivel nivel--baixo">
               <span class="nivel__fio"></span>
-              <span class="mono nivel__rot">DIGITAL PERCEPTION</span>
+              <span class="rotulo nivel__rot">DIGITAL PERCEPTION</span>
             </div>
 
             <span class="ponto-zenith" id="ponto-zenith">
               <i class="ponto-zenith__halo"></i>
               <i class="ponto-zenith__nucleo"></i>
-              <span class="mono ponto-zenith__rot">THE ZENITH POINT <i>•</i></span>
+              <span class="rotulo ponto-zenith__rot">THE ZENITH POINT <i>•</i></span>
             </span>
           </div>
 
@@ -616,7 +619,7 @@
         </h2>
 
         <div class="ideal__txt">
-          <p class="mono ideal__pt" data-reveal>PARA EMPRESAS QUE CRESCERAM ALÉM DO PRÓPRIO SITE.</p>
+          <p class="rotulo ideal__pt" data-reveal>PARA EMPRESAS QUE CRESCERAM ALÉM DO PRÓPRIO SITE.</p>
           <p data-reveal style="--d:.12s">
             Trabalhamos melhor com empresas que já possuem algo valioso e
             perceberam que sua presença digital deixou de representar o nível
@@ -631,7 +634,7 @@
   <section class="secao sobre" id="about" aria-labelledby="t-sobre">
     <div class="rail">
       <header class="secao__topo">
-        <p class="mono num-secao">04 <span aria-hidden="true">/</span> ABOUT</p>
+        <p class="rotulo num-secao">04 <span aria-hidden="true">/</span> ABOUT</p>
         <h2 class="h2" id="t-sobre" data-linhas>
           <span class="linha"><span>ZENITH IS</span></span>
           <span class="linha"><span>A POINT OF</span></span>
@@ -656,7 +659,7 @@
           </p>
         </div>
 
-        <dl class="sobre__ficha mono" data-reveal style="--d:.28s">
+        <dl class="sobre__ficha rotulo" data-reveal style="--d:.28s">
           <div><dt>FOUNDED BY</dt><dd>GABRIEL DIAS</dd></div>
           <div><dt>EST.</dt><dd>2026</dd></div>
           <div><dt>BASE</dt><dd>SÃO PAULO — BR</dd></div>
@@ -680,7 +683,7 @@
   <!-- ══ CTA FINAL + FORMULÁRIO ═════════════════════════════════════════ -->
   <section class="secao contato" id="contact" aria-labelledby="t-contato">
     <div class="rail">
-      <p class="mono num-secao" data-reveal>HAVE A PROJECT?</p>
+      <p class="rotulo num-secao" data-reveal>HAVE A PROJECT?</p>
 
       <h2 class="display contato__h2" id="t-contato" data-linhas>
         <span class="linha"><span>VAMOS ELEVAR</span></span>
@@ -693,15 +696,15 @@
 
       <div class="contato__grid">
         <div class="canais" data-reveal style="--d:.28s">
-          <p class="mono canais__rot">CANAIS DIRETOS</p>
+          <p class="rotulo canais__rot">CANAIS DIRETOS</p>
           <ul class="canais__lista" id="canais-lista">
             <!-- Preenchido por assets/js/main.js a partir do objeto CONTATO. -->
           </ul>
-          <p class="mono canais__loc">SÃO PAULO — BRAZIL<br>AVAILABLE WORLDWIDE</p>
+          <p class="rotulo canais__loc">SÃO PAULO — BRAZIL<br>AVAILABLE WORLDWIDE</p>
         </div>
 
         <form class="form" id="form" novalidate>
-          <p class="mono form__rot">BRIEFING INICIAL</p>
+          <p class="rotulo form__rot">BRIEFING INICIAL</p>
 
           <div class="campo">
             <label for="f-nome">Nome</label>
@@ -761,10 +764,10 @@
             <span>SEND PROJECT REQUEST</span><i aria-hidden="true">↗</i>
           </button>
 
-          <p class="form__status mono" id="form-status" role="status" aria-live="polite"></p>
+          <p class="form__status rotulo" id="form-status" role="status" aria-live="polite"></p>
 
           <noscript>
-            <p class="form__status mono">
+            <p class="form__status rotulo">
               O envio deste formulário depende de JavaScript. Escreva direto para o e-mail listado ao lado.
             </p>
           </noscript>
@@ -779,14 +782,16 @@
   <div class="rail">
     <h2 class="sr" id="t-pe">Rodapé</h2>
 
+    <!-- Assinatura institucional: já traz o slogan na composição aprovada,
+         então não há slogan solto ao lado dela. -->
     <div class="pe__marca">
-      <p class="pe__word">ZENITH<span>DIAS</span></p>
-      <p class="pe__slogan">Presence, elevated<i class="pt" aria-hidden="true">•</i></p>
+      <img class="pe__assinatura" src="assets/img/logo/institucional-negativa.svg"
+           alt="Zenith Dias — Presence, elevated." width="787" height="390" loading="lazy">
     </div>
 
     <div class="pe__cols">
       <nav class="pe__col" aria-label="Navegação do rodapé">
-        <p class="mono pe__rot">NAVIGATION</p>
+        <p class="rotulo pe__rot">NAVIGATION</p>
         <ul>
           <li><a href="#work">Work</a></li>
           <li><a href="#about">About</a></li>
@@ -796,14 +801,14 @@
       </nav>
 
       <div class="pe__col">
-        <p class="mono pe__rot">SOCIAL</p>
+        <p class="rotulo pe__rot">SOCIAL</p>
         <ul id="pe-social">
           <!-- Preenchido por main.js a partir do objeto CONTATO. -->
         </ul>
       </div>
 
       <div class="pe__col">
-        <p class="mono pe__rot">STUDIO</p>
+        <p class="rotulo pe__rot">STUDIO</p>
         <ul>
           <li>São Paulo — Brazil</li>
           <li>Available worldwide</li>
@@ -812,7 +817,7 @@
       </div>
     </div>
 
-    <div class="pe__base mono">
+    <div class="pe__base rotulo">
       <p>© ZENITH DIAS 2026 <span aria-hidden="true">—</span> ALL RIGHTS RESERVED</p>
       <p class="pe__zp">THE ZENITH POINT <i class="pt" aria-hidden="true">•</i></p>
     </div>
