@@ -150,6 +150,220 @@ Verificado sem quebra indesejada em 1024 · 1280 · 1440 · 1680.
 
 ---
 
+## O H1 é uma frase só, e já foi quatro
+
+```
+SUA EMPRESA EVOLUIU.
+SEU DIGITAL TAMBÉM DEVERIA.
+```
+
+Uma linha por FRASE, como o exemplo do brandbook (pág. 11). Com H1 em 64px,
+quatro linhas curtas viravam uma coluna estreita e fraca; quebrar por linha
+visual não sobrevive ao mobile, onde a escala oficial é 40px. Quebrar por
+frase sobrevive aos dois.
+
+**Em 14/09/2026 isto girou entre quatro frases e voltou atrás.** O girador
+chegou a ficar pronto: quatro frases empilhadas na mesma célula de grid,
+troca a cada 3,4s, um fio de Zenith Blue com rastro atravessando o título a
+cada troca, pausa por foco e por ponteiro, texto acessível fixo para leitor
+de tela. O Gabriel olhou rodando e decidiu que não queria — a headline voltou
+a ser uma frase parada.
+
+Fica registrado para ninguém reconstruir achando que é novidade. O que
+sobreviveu daquela rodada são as duas coisas abaixo, que valem
+independentemente do girador.
+
+### O acento não pode ser cortado pela máscara
+
+A caixa de uma linha de texto é mais apertada do que a tinta que ela desenha:
+o Ç desce abaixo dela, o Ã, É e À sobem acima. Medido antes do conserto:
+
+| Linha | Faltava no topo |
+|---|---|
+| À ALTURA (63px) | **−7,84px** |
+| SEU DIGITAL TAMBÉM DEVERIA. (63px) | −1,77px |
+| ANTES DE VOCÊ. (40px) | negativo |
+
+Era a página inteira, não só o hero — 34 linhas mascaradas.
+
+O conserto é `clip-path: inset(-.2em 0 0 0)` na `.linha`, dentro de um
+`@supports`, com `overflow: hidden` de reserva. **Duas outras tentativas
+foram testadas no navegador e descartadas** — vale saber por quê, porque as
+duas parecem certas no papel:
+
+**Margem de recorte afastada** (`overflow-clip-margin`) abre os QUATRO
+lados. O lado de baixo é exatamente o que a máscara do reveal precisa
+fechado: a linha não revelada passou a vazar 8,95px e aparecia atrás do
+próprio esconderijo.
+
+**Padding no topo com margem negativa no span** não muda nada. `overflow`
+corta na PADDING BOX, e padding empurra o conteúdo para dentro sem mover a
+borda do corte. É um no-op caro de descobrir.
+
+Só o inset negativo abre um lado só. Depois do conserto, a pior folga da
+página é +4,69px no topo e +2,53px embaixo, e a altura do H1 não mudou
+(142px no desktop, 222px em 375px).
+
+### A rede de segurança do `<head>`
+
+Todo conteúdo com reveal nasce escondido e só aparece quando o `main.js`
+assume. Se ele não carregar, a página fica em branco. O script inline do
+`<head>` — que não depende de rede — tira `.has-js` depois de 4s se o
+`main.js` nunca tiver marcado `.zd-ok`, e isso desliga toda a regra de
+esconder.
+
+É a quarta camada, junto com o `try/catch` por módulo, a espera limitada do
+loader e a rede de 6s do observador.
+
+---
+
+## A estrela do hero
+
+Um ponto — o Zenith Point — e uma onda que atravessa a tela inteira, para, e
+volta depois de um silêncio. É o fundo do hero desde 14/09/2026.
+
+### O que ela quer dizer
+
+Esta seção existe porque o Gabriel fez a pergunta certa: *"se alguém me
+perguntar o porquê disso, o que eu respondo?"*
+
+> **O ponto é a marca. A onda é o alcance.**
+> Presença não é existir. É chegar.
+
+O slogan oficial é **"Presence, elevated."** Presença não é ocupar espaço — é
+ser registrado por quem está longe. Repare no que a animação **não** faz: o
+ponto não anda, não muda de lugar, não fica maior. O que muda é até onde ele
+chega. É o que o estúdio vende: não se muda a empresa do cliente, muda-se o
+raio em que ela é percebida.
+
+Três decisões que existem por causa disso, e que não devem ser "melhoradas"
+sem entender o custo:
+
+**O ponto acende mas NÃO incha.** O raio é sempre 5px. A primeira versão
+crescia de 5 para 18 — o gesto genérico de pulsar. Se o ponto cresce, a
+leitura vira "a marca aumenta", que é o contrário do que se quer dizer.
+
+**Ela pulsa e para.** Silêncio de 1 a 2,3s entre as ondas. Não é um
+carregamento girando: presença é periódica e intencional, não ruído contínuo.
+
+**O intervalo é irregular** — 3,0 · 3,6 · 3,7 · 4,3 · 3,6 · 3,1s, sorteados
+com semente fixa. Metrônomo lê como máquina; coração não marca tempo
+perfeito.
+
+E uma quarta, que veio do contraste mas diz a mesma coisa: **a onda passa por
+trás da mensagem, nunca por cima.** O texto é literalmente reservado do
+desenho.
+
+### Como é feita
+
+Canvas, **+3KB no site inteiro**, zero imagens (229KB → 232KB). Escolhida
+entre cinco fundos construídos e medidos; os descartados vivem em
+`estudos/fundo-vivo.html`.
+
+| Peça | Por quê |
+|---|---|
+| A onda é uma **banda** de gradiente, não um fio | Um fio de 1px não aguenta ser a única coisa na tela |
+| Raio por `pow(pp, .72)`, não ease-out | Com ease-out ela cruzava a área visível em 650ms — rápido demais para ler como onda. Assim fica ~1,7s em cena |
+| Três ondas defasadas | Uma crista só lê como anel; as ondulações atrás fazem virar onda |
+| Eco de 210ms a 42% | Coração faz "tum-tá". Sem ele o efeito lê como ping de sonar |
+
+Medido em produção, com relógio controlado: repouso 0,13 de energia, pico
+11,35, volta a 0,14. **87× o repouso**, e o pior contraste da linha esmaecida
+durante a batida é 5,98:1.
+
+### A onda revela
+
+Ideia do Gabriel em 15/09/2026: a onda não só atravessa, ela **mostra** — e o
+que aparece some junto com ela. É sonar. Fecha a leitura da peça:
+
+> O ponto é a marca. A onda é o alcance. **E o alcance revela o que está lá.**
+
+O que aparece é uma **vista aérea noturna** — malha urbana em linhas finas de
+luz, vista de muito alto. Escolhida entre quatro construídas: as outras três
+(o próprio trabalho dele alternando por batida, arquitetura vista de baixo, e
+céu de longa exposição) ficaram em `estudos/fundo-vivo.html`.
+
+| | |
+|---|---|
+| Arquivo | `assets/img/fundo/aerea.webp`, 85KB |
+| Origem | 1,8MB de PNG gerado |
+| Peso do site | 232KB → 321KB |
+
+**O tratamento está assado no arquivo**, não em `ctx.filter`. Filtrar uma
+imagem inteira 60 vezes por segundo para um efeito que nunca muda é o caminho
+mais caro possível — e dessaturar e escurecer ainda encolheu o arquivo.
+
+**Não há preload.** A imagem só é necessária 1,4s depois do hero entrar;
+prearregá-la a faria disputar banda com as fontes no caminho crítico. Medido:
+baixa em 539ms sozinha.
+
+**A luz acende ATRÁS da frente, não sobre ela.** A primeira versão punha o
+brilho máximo na crista — e a crista é uma banda acesa, que engolia a imagem.
+E não basta ir um pouco para trás: a onda são TRÊS bandas (crista e duas
+ondulações defasadas em 250ms), então o campo só esvazia depois das três. Daí
+`picoAtras = esp * 2 + 250` e uma cauda de 640px.
+
+### O bug que escondeu tudo, e a lição
+
+Por um tempo a imagem simplesmente não aparecia — nem no navegador do Gabriel.
+A causa: a chamada foi copiada do estudo como `revela(w, h, ...)`, mas o
+`quadro()` da produção usa `larg` e `alt`. **`ReferenceError: w is not
+defined`, 499 vezes.**
+
+Três coisas tornaram isso difícil de ver, e todas valem lembrar:
+
+**O laço sobreviveu ao erro.** `requestAnimationFrame` é agendado ANTES do
+desenho, então a onda continuava animando normalmente enquanto tudo depois da
+linha quebrada nunca desenhava — a imagem, o fio da crista, o clarão do ponto
+**e a reserva do texto**.
+
+**Por isso o contraste dava 3,91:1** e eu não entendia: a reserva nunca rodava
+durante a batida. O sintoma visível (imagem sumida) e o sintoma medido
+(contraste ruim) tinham a mesma causa.
+
+**E eu checava o console cedo demais** — nos primeiros 3 segundos, antes da
+primeira batida em ~2,5s. Em animação com período longo, "console limpo" só
+vale se a janela de observação cobrir pelo menos um ciclo.
+
+### Como verificar isto de novo
+
+O painel de preview do Claude mantém `requestAnimationFrame` congelado, então
+nada disso é observável por lá. O que funciona é **Chrome headless com tempo
+virtual**, que roda rAF de verdade e de forma determinística:
+
+```
+chrome --headless=new --virtual-time-budget=11000 --screenshot=f.png
+       --window-size=1440,900 http://localhost:8796
+```
+
+Variar o orçamento de tempo amostra momentos diferentes da batida. Medir cor
+no resultado composto separa o que é onda (azul: `b - r > 18`) do que é
+imagem (cinza neutro).
+
+---
+
+### Três coisas que não podem ser removidas
+
+**A reserva do texto.** Sem ela o contraste cai de 5,98:1 para 3,1:1 no
+instante em que a frente cruza a manchete. É um retângulo arredondado cavado
+com `destination-out`, com penumbra feita por 18 retângulos concêntricos —
+canvas não tem desfoque confiável em toda parte, isto tem.
+
+**A conferência de tamanho por quadro.** `ResizeObserver` cobre quase tudo,
+mas basta um caso escapar para bitmap e elemento saírem de sincronia: aí o
+canvas **estica** e toda coordenada passa a mentir, inclusive a da reserva,
+que deixa de cair sobre o texto. Isso aconteceu de verdade durante a
+construção e custou caro para diagnosticar, porque nada quebra — só fica
+sutilmente errado. A comparação por quadro é de dois inteiros.
+
+**A parada fora da tela.** `IntersectionObserver` corta o laço quando o hero
+sai de vista. É um hero: o visitante desce e nunca mais volta.
+
+Com `prefers-reduced-motion` ela desenha **um quadro** e nunca mais — zero
+`requestAnimationFrame` pedidos, verificado.
+
+---
+
 ## THE ZENITH POINT
 
 O brandbook dá **diâmetros**, não tamanhos de fonte:
@@ -174,8 +388,7 @@ oficial**, sem alteração de proporção, cor ou espaçamento.
 
 | Onde | Assinatura | Largura aplicada | Mínimo do kit |
 |---|---|---|---|
-| Header (≥960px) | Horizontal negativa | **132px** ⚠️ | 180px |
-| Header (<960px) | Reduzida ZD negativa | 54px | 32px |
+| Header | Horizontal negativa | **104-132px** ⚠️ | 180px |
 | Loader | Principal negativa | 176-272px | 120px |
 | Rodapé | Institucional negativa | 240-416px | 220px |
 | Favicon | Reduzida ZD | quadrado | 32px |
@@ -202,6 +415,14 @@ fechou em **132px** (19px de altura).
 volta para 180px**. Se um dia for revisto com quem montou o kit, as saídas
 limpas são baixar o mínimo declarado da horizontal ou desenhar uma variante
 compacta com o "DIAS" proporcionalmente maior.
+
+Em 14/09/2026 ele pediu a horizontal **também no celular**, no lugar da
+marca reduzida ZD que estava lá: quis o nome por extenso em tela pequena.
+A assinatura passou a ser a mesma em toda largura, encolhendo por `clamp`
+de 132px até 104px abaixo de ~440px de viewport — senão ela dividiria a
+barra com o botão MENU. Medido no pior caso (320px): 104px de logo, 67px de
+botão e 101px de folga entre os dois. A marca reduzida ZD segue no favicon,
+que é o outro uso previsto para ela.
 
 O estudo que gerou a decisão está em `estudos/logo-hero.html` (fora do
 repositório, pelo .gitignore), com as larguras de 180 a 116px e a marcação

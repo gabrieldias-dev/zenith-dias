@@ -274,11 +274,31 @@ strong { font-weight: 500; color: var(--fg); }
 .has-js [data-reveal].is-in { opacity: 1; transform: none; }
 
 /* Linhas em máscara de overflow */
+/* A caixa de uma linha de texto e mais apertada que a tinta que ela desenha:
+   o C-cedilha desce abaixo dela e o A-til, E-agudo e A-crase sobem acima.
+   Medido: faltavam 1,77px no topo de "SEU DIGITAL TAMBEM DEVERIA." a 47px e
+   7,84px em "A ALTURA" a 62,6px — acento cortado a pagina inteira.
+
+   Duas tentativas descartadas antes desta, as duas verificadas no navegador:
+     1. afastar o corte com margem de recorte abre os QUATRO lados, e o de
+        baixo e exatamente o que a mascara do reveal precisa fechado: a linha
+        nao revelada vazava 8,95px e aparecia atras do proprio esconderijo;
+     2. padding no topo com margem negativa no span nao muda nada, porque
+        overflow corta na PADDING BOX — padding empurra o conteudo para
+        dentro sem mover a borda do corte.
+
+   clip-path com inset NEGATIVO no topo e o unico que abre um lado so. O de
+   baixo fica em 0, ou seja, na borda da caixa, do jeito que a mascara precisa.
+   Sem margem, sem colapso, sem mudanca de altura.
+   @supports guarda o overflow para quem nao aceitar inset negativo. */
 .linha {
   display: block;
   overflow: hidden;
   padding-bottom: .09em;
   margin-bottom: -.09em;
+}
+@supports (clip-path: inset(-1px 0 0 0)) {
+  .linha { overflow: visible; clip-path: inset(-.2em 0 0 0); }
 }
 .has-js [data-linhas] .linha > span {
   display: block;
@@ -467,12 +487,13 @@ html.menu-aberto .medidor { opacity: 0; }
 }
 .marca:hover { opacity: .78; }
 .marca img { height: auto; }
-.marca__larga { display: none; width: 132px; }   /* 132px: escolha do Gabriel em 14/09/2026, olhando o estudo. Abaixo do
-                                                    mínimo de 180px do brandbook (pág. 08) — ver DESIGN.md. */
-.marca__zd    { display: block; width: 54px; }   /* reduzida: mínimo 32px */
-@media (min-width: 60rem) {
-  .marca__larga { display: block; }
-  .marca__zd    { display: none; }
+/* Assinatura horizontal em toda largura. 132px é escolha do Gabriel
+   (14/09/2026), 27% abaixo do mínimo de 180px do brandbook — ver DESIGN.md.
+   No celular ela encolhe um pouco mais, senão divide a barra com o botão
+   MENU: 30vw só entra abaixo de ~440px de viewport. */
+.marca__larga {
+  display: block;
+  width: clamp(104px, 30vw, 132px);
 }
 
 .nav { display: none; gap: clamp(1.25rem, 2.6vw, 2.25rem); }
@@ -584,6 +605,21 @@ html.menu-aberto .medidor { opacity: 0; }
      da altura. O topo precisa liberar o header fixo (~81px). */
   padding: clamp(6.25rem, 13vh, 8.5rem) 0 clamp(3.25rem, 6.8vh, 5rem);
   overflow: hidden;
+}
+
+/* ── A ESTRELA ────────────────────────────────────────────────────────────
+   Fica atrás de tudo no hero: .hero__in é position:relative e vem depois no
+   documento, então pinta por cima sem precisar de z-index disputado.
+   Some junto com o resto do hero na rolagem, como a grade de eixos, e
+   dissolve na base para não cortar seco na seção seguinte. */
+.estrela {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: calc(1 - var(--hs, 0) * .8);
+  -webkit-mask-image: linear-gradient(to bottom, #000 72%, transparent 99%);
+          mask-image: linear-gradient(to bottom, #000 72%, transparent 99%);
 }
 
 /* grid de eixos verticais, muito discreto */
@@ -1353,6 +1389,7 @@ html.menu-aberto .medidor { opacity: 0; }
   .loader { display: none !important; }
   .cursor { display: none !important; }
   .scroll-ind__fio i { animation: none; transform: none; height: 45%; }
+  /* a estrela nao bate: o JS desenha so o ponto parado */
   .planta, .planta__b { transform: none !important; }
 
   /* a convergência entrega o estado final, sem depender de scroll */

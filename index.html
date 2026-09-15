@@ -42,6 +42,13 @@
   var visto = false;
   try { visto = sessionStorage.getItem('zd:entrada') === '1'; } catch (e) {}
   if (calmo || visto) { h.classList.add('sem-loader', 'is-ready'); }
+
+  /* Rede de segurança global: todo conteudo com reveal (inclusive o h1) nasce
+     escondido e so aparece quando o main.js assume. Se ele nao carregar, tirar
+     .has-js desliga as regras de esconder e a pagina inteira volta a aparecer. */
+  setTimeout(function () {
+    if (!h.classList.contains('zd-ok')) { h.classList.remove('has-js'); }
+  }, 4000);
 })();
 </script>
 
@@ -99,13 +106,12 @@
 <!-- ══ HEADER ═══════════════════════════════════════════════════════════ -->
 <header class="cabeca" id="cabeca">
   <div class="cabeca__in">
-    <!-- Assinatura horizontal no desktop (mínimo 180px do brandbook) e marca
-         reduzida ZD no mobile, que é exatamente o uso previsto para ela. -->
+    <!-- Assinatura horizontal em TODAS as larguras, inclusive celular:
+         decisão do Gabriel em 14/09/2026, para o nome por extenso aparecer
+         também em tela pequena. A marca reduzida ZD segue no favicon. -->
     <a class="marca" href="#hero" aria-label="Zenith Dias — início">
       <img class="marca__larga" src="assets/img/logo/horizontal-negativa.svg"
            alt="" width="1204" height="176">
-      <img class="marca__zd" src="assets/img/logo/reduzida-negativa.svg"
-           alt="" width="294" height="175">
     </a>
 
     <nav class="nav" aria-label="Navegação principal">
@@ -144,6 +150,9 @@
 
   <!-- ══ HERO ═══════════════════════════════════════════════════════════ -->
   <section class="hero" id="hero">
+    <!-- A estrela: um ponto e uma onda que o atravessa. Sem JS fica vazio e
+         o hero é exatamente o de antes — por isso é canvas e não imagem. -->
+    <canvas class="estrela" id="estrela" aria-hidden="true"></canvas>
     <div class="hero__grade" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 
     <div class="hero__in">
@@ -154,7 +163,10 @@
       <!-- Uma linha por FRASE, como no exemplo do brandbook (pág. 11).
            Com H1 em 64px, quatro linhas curtas viravam uma coluna estreita e
            fraca; e quebrar por linha visual não sobrevive ao mobile, onde a
-           escala oficial é 40px. Quebrar por frase sobrevive aos dois. -->
+           escala oficial é 40px. Quebrar por frase sobrevive aos dois.
+
+           Já girou entre quatro frases (14/09/2026). O Gabriel olhou rodando
+           e voltou atrás: uma frase só, parada. -->
       <h1 class="display hero__h1" data-linhas>
         <span class="linha"><span>SUA EMPRESA EVOLUIU.</span></span>
         <span class="linha linha--dim"><span>SEU DIGITAL TAMBÉM DEVERIA.</span></span>
