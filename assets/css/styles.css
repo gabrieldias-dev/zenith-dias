@@ -200,6 +200,33 @@ a { color: inherit; text-decoration: none; }
 /* Rótulo técnico. O nome antigo era `mono`, de quando a família técnica era
    monoespaçada; o kit define rótulo em Inter Medium, então a classe passou a
    se chamar pelo que ela é. */
+/* ── TRADUÇÃO ─────────────────────────────────────────────────────────────
+   As manchetes de seção são em inglês; esta linha diz a mesma coisa em
+   português, em micro-tipo, logo abaixo.
+
+   NÃO É LEGENDA: usa a mesma escala dos rótulos "01 / WORK", então lê como
+   parte do sistema e não como acessório colado por cima. O padrão já existia
+   em dois lugares do site (.problema__en e .ideal__pt, cada um com sua regra
+   avulsa) — isto é o mesmo, com um nome só.
+
+   Sempre visível, e não em hover: hover não existe em toque, e esconder a
+   tradução atrás de interação faria quase ninguém ver — que é o oposto do
+   problema que ela resolve.
+
+   fg-faint é 5,6:1 sobre o fundo: passa o mínimo com folga mesmo sendo o
+   tom mais apagado do sistema. */
+.traducao { color: var(--fg-faint); max-width: 46ch; }
+h2 + .traducao { margin-top: clamp(1rem, 2.2vh, 1.6rem); }
+
+/* No pull quote o texto não é caixa alta, então a tradução acompanha —
+   e precisa vencer .destaque p, que é do tamanho de um H2. */
+.destaque .traducao {
+  font-size: var(--t-rotulo); font-weight: 500;
+  line-height: var(--lh-rotulo); letter-spacing: normal;
+  text-transform: none; max-width: 40ch;
+  margin-top: clamp(1.25rem, 2.5vh, 1.75rem);
+}
+
 .rotulo {
   font-family: var(--sans);
   font-size: var(--t-rotulo);
@@ -1192,7 +1219,6 @@ html.menu-aberto .medidor { opacity: 0; }
   .ideal__txt { margin-left: auto; width: min(44ch, 52%); }
 }
 .ideal__txt { display: flex; flex-direction: column; gap: 1.1rem; color: var(--fg-dim); max-width: 44ch; }
-.ideal__pt { color: var(--fg-faint); letter-spacing: var(--track-rotulo); }
 
 /* ── 22 SOBRE ─────────────────────────────────────────────────────────── */
 .sobre__grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }

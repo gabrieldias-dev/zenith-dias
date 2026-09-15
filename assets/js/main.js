@@ -145,14 +145,32 @@
      Escolhida pelo Gabriel em 14/09/2026 entre cinco fundos construidos e
      testados; os descartados ficaram em estudos/fundo-vivo.html.           */
   var ESTRELA = {
-    base: 3600,      // intervalo medio entre batidas
+    base: 4100,      // intervalo medio entre batidas
     variacao: 800,   // ... com folga: metronomo le como maquina
-    dur: 2000,       // quanto a onda leva para atravessar e apagar
+    /* Quanto a onda leva para atravessar e apagar. Subiu de 2000 para 2600
+       em 15/09/2026: a pedido do Gabriel, a frente cruza a area visivel em
+       1,35s em vez de 1,04s.
+
+       ESTE NUMERO TEM TETO, e o teto e o silencio. A onda sai da tela em
+       pp=0,52, mas a imagem revelada fica ate pp=0,94 — a coroa da revelacao
+       tem 640px de cauda ATRAS da frente. Entao o que ocupa a tela nao e
+       dur*0,52, e dur*0,94. Com intervalo minimo de 3300ms (base 4100 menos
+       a variacao de 800):
+
+         dur 2600  ->  856ms de silencio no intervalo mais curto
+         dur 2800  ->  668ms
+         dur 3200  ->  292ms
+         dur 3600  ->  nenhum: as ondas encavalam
+
+       E o silencio e metade do efeito. Para ir alem de 2800 sem perde-lo, o
+       que tem de subir junto e base. */
+    dur: 2600,
     eco: 210,        // a segunda batida, o "ta" do "tum-ta"
     ecoForca: 0.42,
     primeira: 1400,  // deixa a entrada do hero terminar antes da 1a batida
-    ondas: 3,
-    atraso: 250      // defasagem entre a crista e as ondulacoes de tras
+    ondas: 2,        // DUAS, nao tres: a frente modulada ja tem informacao
+                     // propria, e tres ondulacoes onduladas viram renda
+    atraso: 280      // defasagem entre a crista e a ondulacao de tras
   };
 
   /* Os instantes das batidas sao sorteados UMA vez, com semente fixa: o
@@ -212,9 +230,12 @@
       for (var i = i0; i < BATIDAS.length && i < i0 + 8; i++) {
         var d = tp - BATIDAS[i];
         if (d < 0) break;
-        if (d < ESTRELA.dur) out.push({ idade: d, forca: 1 });
+        /* n e o numero da batida no calendario. O rodizio escolhe a foto
+           por ele, e o eco leva o mesmo n: os dois tempos do "tum-ta" sao
+           a MESMA batida e tem de mostrar a mesma imagem. */
+        if (d < ESTRELA.dur) out.push({ idade: d, forca: 1, n: i });
         var de = d - ESTRELA.eco;
-        if (de >= 0 && de < ESTRELA.dur) out.push({ idade: de, forca: ESTRELA.ecoForca });
+        if (de >= 0 && de < ESTRELA.dur) out.push({ idade: de, forca: ESTRELA.ecoForca, n: i });
       }
       return out;
     }
@@ -223,44 +244,143 @@
        Nao e um fio: e uma banda de luz, gradiente radial com nucleo aceso e
        queda para os dois lados. Um fio de 1px nao aguenta ser a unica coisa
        na tela. O preenchimento e recortado na coroa, nao na tela toda. */
-    function banda(cx, cy, raio, esp, alfa, branco) {
+    /* A FRENTE NAO E UM CIRCULO.
+       Escolhida pelo Gabriel em 15/09/2026 entre seis formas construidas
+       (as outras vivem em estudos/onda.html): circulo perfeito le como
+       compasso, e o raio modulado le como agua. O sentido da peca nao muda —
+       sai do ponto, cresce, perde forca, atravessa e some — muda o que a
+       forma DIZ sobre quem manda a onda.
+
+       Dois harmonicos lentos e de amplitude pequena, 5,5% e 3,5%. Nao e
+       ruido: e proposital que sejam so dois e de periodo longo, senao a
+       frente vira serra em vez de respirar. E a amplitude e pequena de
+       proposito tambem — a coroa que recorta a imagem revelada continua
+       RADIAL, e com mais que isso as duas se descolariam. */
+    function caminhoOnda(cx, cy, r, fase, amp) {
+      var N = 56;
+      var a1 = 0.055 * amp, a2 = 0.035 * amp;
+      for (var g = 0; g <= N; g++) {
+        var th = g / N * Math.PI * 2;
+        var rr = r * (1 + a1 * Math.sin(3 * th + fase) + a2 * Math.sin(5 * th - fase * 0.7));
+        var x = cx + Math.cos(th) * rr, y = cy + Math.sin(th) * rr;
+        if (g === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+    }
+
+    /* A ondulacao CRESCE com a viagem, nao nasce pronta.
+       Com amplitude fixa o harmonico de 3 lobos, que em raio grande le como
+       agua, em raio pequeno le como TRIANGULO arredondado: perto do ponto a
+       frente virava geometria, exatamente o oposto do que a forma existe
+       para dizer. Ate 35% do caminho ela abre de circulo ate a amplitude
+       cheia — e isso tambem e o que uma onda faz de verdade, acumular
+       irregularidade ao propagar. */
+    function amplitude(pp) { return Math.min(1, pp / 0.35); }
+
+    /* Canvas nao da gradiente ao longo de um caminho arbitrario, entao a
+       banda e feita de SETE tracos concentricos com alfa em triangulo. E o
+       mesmo recurso da penumbra da reserva: varias passadas simples no lugar
+       de um desfoque que o canvas nao tem de forma confiavel.
+
+       So a CRISTA e azul. A ondulacao de tras e branca — com as duas azuis
+       elas se somam e a onda vira um anel grosso e saturado. */
+    function banda(cx, cy, raio, esp, alfa, branco, fase, amp) {
       if (alfa <= 0.004 || raio <= 0) return;
-      var r0 = Math.max(0.01, raio - esp), r1 = raio + esp;
-      var g = ctx.createRadialGradient(cx, cy, r0, cx, cy, r1);
-      /* So a CRISTA e azul. As duas ondulacoes de tras sao brancas — com as
-         tres azuis elas se somam e a onda vira um anel grosso e saturado,
-         que nao e o que foi aprovado no estudo. */
-      var f = branco ? function (a) { return 'rgba(241,240,235,' + (a < 0 ? 0 : a) + ')'; } : cor;
-      g.addColorStop(0, f(0));
-      g.addColorStop(0.5, f(alfa));
-      g.addColorStop(1, f(0));
-      ctx.fillStyle = g;
-      var x = Math.max(0, cx - r1), y = Math.max(0, cy - r1);
-      var w = Math.min(larg, cx + r1) - x, hh = Math.min(alt, cy + r1) - y;
-      if (w > 0 && hh > 0) ctx.fillRect(x, y, w, hh);
+      var P = 7;
+      for (var i = 0; i < P; i++) {
+        var d = (i / (P - 1) - 0.5) * 2;
+        /* O PAR 0.69 / 0.70 anda junto: nao mexa em um sem o outro.
+
+           No estudo era 1.15 com traco de 0.42*esp, e naquela largura os
+           tracos se ENCOSTAM em vez de se fundir: lendo os pixels do
+           renderizador ao longo de um raio, o perfil afundava 49% entre um
+           traco e o vizinho. Em banda estreita ninguem ve; quando a onda
+           engrossa ao viajar, a crista vira um anel listrado.
+
+           Traco de 0.70*esp derruba o afundamento para 29% — o platо, ir
+           para 1.35 nao melhora mais, so achata o pico. E 0.69 no alfa
+           devolve a luz: integrada, a banda entrega 0,96x a do estudo, que
+           e o que o Gabriel aprovou. Mesmo custo, sete tracos ainda.
+
+           Referencia: esta banda entrega ~1,3x a luz da versao circular
+           antiga. Parte do motivo de ela ler como mais viva e isso, nao so a
+           forma. Se um dia parecer forte demais, o lugar de baixar e aqui —
+           nao em alfa, que tambem alimenta a revelacao e o clarao do ponto. */
+        var a = alfa * (1 - Math.abs(d)) * 0.69;
+        if (a <= 0.004) continue;
+        ctx.strokeStyle = branco
+          ? 'rgba(241,240,235,' + a + ')'
+          : cor(a);
+        ctx.lineWidth = esp * 0.70;
+        ctx.beginPath();
+        caminhoOnda(cx, cy, raio + d * esp, fase, amp);
+        ctx.stroke();
+      }
     }
 
     /* ── o que a onda revela ──
-       A onda nao so atravessa: ela MOSTRA. Uma vista aerea noturna — malha
-       urbana em linhas finas de luz — que acende atras da frente e some
-       junto com ela. Escolha do Gabriel em 15/09/2026 entre quatro opcoes
-       construidas (as outras vivem em estudos/fundo-vivo.html).
+       A onda nao so atravessa: ela MOSTRA. Vistas noturnas de cima — linhas
+       de luz — que acendem atras da frente e somem junto com ela.
 
        Fecha a leitura da peca: o ponto e a marca, a onda e o alcance, e o
        alcance revela o que esta la.
 
-       O tratamento (dessaturar e escurecer) esta ASSADO no .webp. Filtrar a
-       imagem inteira 60 vezes por segundo para um efeito que nunca muda
-       seria o caminho mais caro possivel — e o arquivo ainda encolheu, de
-       1,8MB de PNG para 85KB. */
-    var CAUDA = 640;
-    var img = null, mascara = null;
+       UMA IMAGEM SO, e cada batida mostra um PEDACO diferente dela.
 
+       Houve um rodizio de quatro fotos aereas, e ele foi desfeito em
+       15/09/2026 por um motivo concreto: quatro aereas noturnas quase
+       iguais nao sao percebidas como troca. Um rodizio que ninguem nota nao
+       e um rodizio — e uma imagem so custando quatro vezes mais. Eram 305KB
+       por um efeito invisivel por construcao.
+
+       Deslocar o enquadramento da a mesma sensacao de "nunca e igual" com um
+       arquivo so. E o que se ve a cada batida e um pedaco de cidade que nao
+       apareceu na anterior, que era a ideia original: cada varredura do
+       sonar encontra um lugar diferente.
+
+       A fonte e visaoaerea3.png, escolhida pelo Gabriel entre as quatro. As
+       descartadas vivem em estudos/capturas/ e nos estudos.
+
+       O BRILHO (0.60 assado no arquivo) veio da calibragem contra a aerea
+       antiga, que foi a aprovada e medida. Mantido para nao mudar a luz que
+       ja passou pelo teste de contraste.
+
+       O tratamento (dessaturar e escurecer) esta ASSADO em cada .webp.
+       Filtrar a imagem inteira 60 vezes por segundo para um efeito que nunca
+       muda seria o caminho mais caro possivel. */
+    var CAUDA = 640;
+    var mascara = null;
+
+    var FOTO = 'assets/img/fundo/aerea.webp';
+    var img = null;
+
+    /* ZOOM e o preco do enquadramento, e ele e literal: desenhar a imagem
+       1,15x maior que o necessario cria 15% de folga para deslocar dentro
+       dela — e custa 15% de nitidez, porque a fonte tem 1536px e nao cresce.
+
+       1.15 e o teto que eu aceitaria. Em 1,3 a folga seria melhor e a imagem
+       comecaria a amolecer em tela grande. Se um dia a fonte for ampliada
+       para ~3000px, este numero pode subir junto e so entao.
+
+       As posicoes vao de 0 a 1 dentro da folga. Nao sao aleatorias: estao
+       ordenadas para que duas batidas seguidas caiam longe uma da outra —
+       com 4,1s de silencio no meio, o olho compara a de agora com a
+       anterior, e so isso. Seis, entao a volta leva ~25s. */
+    var ZOOM = 1.15;
+    var QUADROS = [
+      [0.10, 0.20], [0.86, 0.60], [0.34, 0.92],
+      [0.94, 0.14], [0.20, 0.66], [0.62, 0.34]
+    ];
+
+    /* Sem preload: a imagem so e necessaria 1,4s depois do hero entrar, e
+       pre-carrega-la a faria disputar banda com as fontes no caminho
+       critico. Com um arquivo so, a fila que existia aqui deixou de ter
+       proposito — e 171KB a menos para baixar. */
     function carregaImagem() {
       var im = new Image();
       im.onload = function () { im.pronta = true; };
       im.onerror = function () { im.pronta = false; };   // sem imagem, so a onda
-      im.src = 'assets/img/fundo/aerea.webp';
+      im.src = FOTO;
       img = im;
     }
 
@@ -270,7 +390,7 @@
        e duas ondulacoes, e o campo so esvazia depois das tres. */
     function picoAtras(esp) { return esp * 2 + 250; }
 
-    function revela(w, h, cx, cy, frente, amp, esp) {
+    function revela(w, h, cx, cy, frente, amp, esp, n) {
       if (!img || !img.pronta) return;
       if (!mascara) mascara = document.createElement('canvas');
       var lw = Math.round(w * esc), lh = Math.round(h * esc);
@@ -280,10 +400,14 @@
       m.clearRect(0, 0, lw, lh);
       m.setTransform(esc, 0, 0, esc, 0, 0);
 
-      /* cobre sem distorcer, como background-size:cover */
+      /* Cobre sem distorcer, como background-size:cover — mas COM FOLGA, e
+         o enquadramento desta batida decide onde dentro dela. A folga
+         vertical ja existia de graca (a fonte e 3:2 e o hero e 16:9, entao
+         sobra altura); a horizontal vem do ZOOM. */
       var ri = img.naturalWidth / img.naturalHeight, rc = w / h, dw, dh;
-      if (ri > rc) { dh = h; dw = h * ri; } else { dw = w; dh = w / ri; }
-      m.drawImage(img, (w - dw) / 2, (h - dh) / 2, dw, dh);
+      if (ri > rc) { dh = h * ZOOM; dw = dh * ri; } else { dw = w * ZOOM; dh = dw / ri; }
+      var q = QUADROS[n % QUADROS.length];
+      m.drawImage(img, -(dw - w) * q[0], -(dh - h) * q[1], dw, dh);
 
       /* A coroa. A ULTIMA parada TEM de ser 0: destination-in com gradiente
          radial estende a cor final para todo o lado de fora do raio maior —
@@ -377,10 +501,12 @@
              a distancia no primeiro terco e cruzava a area visivel em 650ms,
              rapido demais para ler como onda. Assim fica ~1,7s em cena. */
           var raio = Math.pow(pp, 0.72) * diag * 1.12;
-          var esp = 16 + 74 * pp;          // se espalha ao viajar
+          var esp = 20 + 78 * pp;          // se espalha ao viajar
           var queda = 1 - pp;              // e perde energia, mas devagar
-          var peso = fb * queda * (k === 0 ? 1 : (k === 1 ? 0.42 : 0.2));
-          banda(cx, cy, raio, esp, 0.68 * peso, k !== 0);
+          var peso = fb * queda * (k === 0 ? 1 : 0.38);
+          /* A fase anda com o tempo: sem isso a ondulacao fica congelada e a
+             frente parece uma estrela de pontas, nao agua. */
+          banda(cx, cy, raio, esp, 0.68 * peso, k !== 0, t / 900, amplitude(pp));
 
           /* So a crista revela: as ondulacoes de tras sao eco, nao sonar. */
           /* larg/alt, nao w/h: quadro() usa esses nomes. Copiei a chamada do
@@ -389,14 +515,17 @@
              agendado antes do desenho, e tudo depois desta linha (imagem,
              fio da crista, clarao do ponto E a reserva do texto) nunca
              desenhava. */
-          if (k === 0 && peso > 0.015) revela(larg, alt, cx, cy, raio, peso, esp);
+          if (k === 0 && peso > 0.015) revela(larg, alt, cx, cy, raio, peso, esp, lista[b].n);
 
           /* um fio nitido na crista da onda principal: sem ele a banda vira
              nevoa e a onda perde a frente */
+          /* um fio nitido na crista: sem ele a banda vira nevoa e a onda
+             perde a frente. Ele segue o MESMO caminho modulado — um arco
+             perfeito por cima de uma banda ondulada entrega o truque. */
           if (k === 0 && peso > 0.02) {
             ctx.strokeStyle = cor(0.72 * peso);
             ctx.lineWidth = 1 + 1.5 * queda;
-            ctx.beginPath(); ctx.arc(cx, cy, raio, 0, Math.PI * 2); ctx.stroke();
+            ctx.beginPath(); caminhoOnda(cx, cy, raio, t / 900, amplitude(pp)); ctx.stroke();
           }
         }
 
@@ -421,14 +550,28 @@
       ctx.fillStyle = cor(0.92);
       ctx.beginPath(); ctx.arc(cx, cy, 5, 0, Math.PI * 2); ctx.fill();
 
-      /* Mais funda do que quando era so a onda: a imagem acende ~75x mais
-         que qualquer coisa desenhada, e chega ao titulo por todos os lados.
-         Medido sem esta margem: 4,51:1, raspando o minimo de 4,5. */
-      /* Medido no resultado composto, com a malha revelada por tras da
-         manchete: com teto em .96 o pior contraste ficava em 4,57 — passa,
-         mas com 0,07 de folga sobre o minimo. A imagem acende muito mais que
-         a onda sozinha, entao os 4% que sobravam ja pesavam. Teto em .985. */
-      reserva(limita(0.40 + pico * 0.60, 0.15, 0.985));
+      /* Quanto a reserva apaga sobre o titulo. Nao e "escurecer": e um
+         destination-out — ela REMOVE a onda e a imagem naquela area.
+
+         Esteve em .985 (sobrava 1,5% da imagem) e o Gabriel via a forma do
+         retangulo em 15/09/2026. Esse e o defeito de uma reserva forte
+         demais: ela deixa de proteger e passa a desenhar. Teto em .78 — passa
+         15x mais imagem sobre o titulo e a caixa se dissolve no fundo.
+
+         Medido no quadro composto, com os glifos escondidos para que toda a
+         faixa do H1 seja fundo puro (e o unico jeito honesto: a 2a linha e
+         branco a 62%, e qualquer limiar que separe os glifos do fundo corta
+         justamente o fundo claro que se quer medir):
+
+           fundo tipico     6,90:1  em .985 e em .78 — o nucleo nao mudou
+           pior pixel       5,8:1 em .985  ->  4,7:1 em .78
+           batida mais dura a da aerea: e malha fina, tem pixels isolados
+                            claros que o delta e o no nao tem
+
+         O H1 tem 40-64px, entao o minimo da WCAG AA aqui e 3:1, nao 4,5:1.
+         Se um dia alguem baixar mais este teto, MEÇA de novo: o limite real
+         nao e o valor, e o pior pixel na batida da aerea. */
+      reserva(limita(0.28 + pico * 0.50, 0.10, 0.78));
     }
 
     function anda() {

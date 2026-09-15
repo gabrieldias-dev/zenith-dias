@@ -36,6 +36,40 @@ E a interação central: a **convergência** entre `REAL VALUE` e
 
 ---
 
+## As manchetes são em inglês, e há uma linha em português embaixo
+
+Decisão do Gabriel em 15/09/2026. O inglês nas manchetes de seção é
+intencional — sinaliza que o estúdio não se limita ao português — mas grande
+parte do público não lê inglês, e mandar alguém sair do site para traduzir uma
+frase é perder a pessoa.
+
+**O padrão já existia no site antes desta decisão**, em dois lugares e com uma
+regra CSS avulsa cada: `.problema__en` (português grande, inglês pequeno) e
+`.ideal__pt` (inglês grande, português pequeno). Viraram um componente só,
+`.traducao`, aplicado em seis lugares.
+
+**Não é legenda.** Usa a mesma escala dos rótulos `01 / WORK` — 12px contra
+40px da manchete — então lê como parte do sistema, não como acessório colado
+por cima. Contraste medido no site: 5,62:1 nas seções escuras e 6,91:1 no
+pull quote, acima do mínimo de 4,5:1 que vale para texto desse tamanho.
+
+**Sempre visível, e não em hover.** Hover não existe em toque, e esconder a
+tradução atrás de interação faria quase ninguém ver — que é exatamente o
+problema que ela resolve. Um seletor global de idioma também foi descartado:
+ele promete um site inteiramente bilíngue, que este não é.
+
+### A que não recebeu tradução, e por quê
+
+`ZENITH IS A POINT OF PERSPECTIVE.` ficou sem. O parágrafo imediatamente
+abaixo dela já diz, em português: *"Zenith representa o ponto mais alto em
+relação ao observador. Para nós, representa perspectiva."* Uma linha de
+tradução ali repetiria a mesma frase duas vezes seguidas — ruído, não ajuda.
+
+O critério é esse: **traduz quando a frase em inglês é a afirmação inteira.**
+Quando o português logo abaixo já carrega o sentido, a tradução vira eco.
+
+---
+
 ## Cor
 
 Paleta oficial, copiada de `03_Paleta/zenith-dias-cores.css`:
@@ -243,16 +277,113 @@ sem entender o custo:
 crescia de 5 para 18 — o gesto genérico de pulsar. Se o ponto cresce, a
 leitura vira "a marca aumenta", que é o contrário do que se quer dizer.
 
-**Ela pulsa e para.** Silêncio de 1 a 2,3s entre as ondas. Não é um
+**Ela pulsa e para.** Silêncio de 0,9 a 2,5s entre as ondas. Não é um
 carregamento girando: presença é periódica e intencional, não ruído contínuo.
 
-**O intervalo é irregular** — 3,0 · 3,6 · 3,7 · 4,3 · 3,6 · 3,1s, sorteados
+`dur` foi de 2000 para **2600** em 15/09/2026, a pedido do Gabriel: a frente
+passou a cruzar a área visível em 1,35s em vez de 1,04s. **E este número tem
+teto, que é justamente o silêncio.** A onda sai da tela em `pp = 0,52`, mas a
+imagem revelada fica até `pp = 0,94` — a coroa da revelação tem 640px de
+cauda ATRÁS da frente, então o que ocupa a tela não é `dur × 0,52` e sim
+`dur × 0,94`. Contra o intervalo mínimo de 3300ms:
+
+| `dur` | cruza a tela | silêncio no intervalo mais curto |
+|---|---|---|
+| 2000 | 1,04s | 1,54s |
+| **2600** | **1,35s** | **0,86s** |
+| 2800 | 1,46s | 0,67s |
+| 3200 | 1,67s | 0,29s |
+| 3600 | 1,87s | nenhum — as ondas encavalam |
+
+Para passar de 2800 sem perder o silêncio, o que tem de subir junto é `base`.
+
+**O intervalo é irregular** — 4,9 · 4,4 · 3,7 · 3,4 · 4,4 · 4,4s, sorteados
 com semente fixa. Metrônomo lê como máquina; coração não marca tempo
 perfeito.
+
+`base` foi de 3600 para **4100** em 15/09/2026, a pedido do Gabriel. Ele
+pediu "3,5s achando que estava em 3s" — estava em 3,6s, e pôr 3,5 teria
+acelerado em vez de afrouxar. O que ele queria era meio segundo a mais de
+silêncio, e é isso que 4100 entrega.
 
 E uma quarta, que veio do contraste mas diz a mesma coisa: **a onda passa por
 trás da mensagem, nunca por cima.** O texto é literalmente reservado do
 desenho.
+
+### A frente não é um círculo
+
+Escolhida pelo Gabriel em 15/09/2026 entre seis formas construídas; as outras
+cinco (elipse, cinco anéis finos, crista única, esteira, e o próprio círculo)
+ficaram em `estudos/onda.html` — abra com `#elipse`, `#agua`, etc., ou use
+← → e 1…6.
+
+**Círculo perfeito lê como compasso. Raio modulado lê como água.** O sentido da
+peça não muda — sai do ponto, cresce, perde força, atravessa e some. Muda o que
+a forma diz sobre quem manda a onda.
+
+Dois harmônicos lentos, 5,5% e 3,5%. São só dois e de período longo de
+propósito: mais que isso e a frente vira serra em vez de respirar. E a
+amplitude é pequena também de propósito — **a coroa que recorta a imagem
+revelada continua radial**, e com mais que isso as duas se descolariam.
+
+Duas ondas, não três: a frente modulada já tem informação própria, e três
+ondulações onduladas viram renda.
+
+### As duas coisas que quebraram ao levar a forma do estudo para o site
+
+Nenhuma aparecia no estudo. As duas são de escala — e as duas foram medidas,
+não estimadas.
+
+**A amplitude fixa virava um triângulo.** O harmônico de 3 lóbulos, que em raio
+grande lê como água, em raio pequeno lê como triângulo arredondado: perto do
+ponto a frente virava geometria, o oposto exato do que a forma existe para
+dizer. Agora a ondulação **cresce com a viagem** — de círculo até a amplitude
+cheia nos primeiros 35% do caminho. Que é também o que uma onda faz de verdade,
+acumular irregularidade ao propagar.
+
+**Os sete traços se encostavam em vez de se fundir.** Canvas não dá gradiente
+ao longo de um caminho arbitrário, então a banda é feita de sete traços
+concêntricos com alfa em triângulo — o mesmo recurso da penumbra da reserva.
+Com traço de `0.42 * esp`, lendo os pixels do renderizador ao longo de um
+raio, **o perfil afundava 49% entre um traço e o vizinho**. Em banda estreita
+ninguém vê; quando a onda engrossa ao viajar, a crista virava um anel listrado.
+
+| traço | afundamento | luz |
+|---|---|---|
+| `0.42 * esp` (o do estudo) | 49% | 1,00x |
+| **`0.70 * esp`** | **29%** | **0,96x** |
+| `1.35 * esp` | 30% | 0,95x |
+
+Traço mais largo resolve; mais traços não (ficam mais estreitos em relação ao
+espaçamento e o problema volta). E 0,70 é o platô — ir além só achata o pico.
+O multiplicador de alfa caiu de 1,15 para **0,69** junto, para devolver a luz:
+o par anda junto, não mexa em um sem o outro.
+
+Para referência: esta banda entrega ~1,3x a luz da versão circular antiga.
+Parte do motivo de ela ler como mais viva é isso, não só a forma. Se um dia
+parecer forte demais, o lugar de baixar é o multiplicador da banda — não
+`alfa`, que também alimenta a revelação da imagem e o clarão do ponto.
+
+### O custo, medido
+
+Sete traços de 56 segmentos, duas ondas, mais o fio da crista, por quadro.
+Medido no renderizador real, não estimado:
+
+| | ms por quadro |
+|---|---|
+| 1440x900, dpr 2 | 0,25 |
+| 390x780, dpr 2 | 0,18 |
+| orçamento a 60fps | 16,7 |
+
+Sessenta vezes de folga nesta máquina. **E não meça isso com
+`--virtual-time-budget`**: sob tempo virtual o rAF roda tão rápido quanto o
+renderizador aguenta, e o "fps" que aparece não quer dizer nada — a primeira
+medida assim deu "4fps" e era artefato puro.
+
+Contraste do H1 com a frente ondulada, medido com os glifos escondidos:
+típico 6,88:1, pior pixel entre 5,00 e 5,69:1.
+
+---
 
 ### Como é feita
 
@@ -278,30 +409,96 @@ que aparece some junto com ela. É sonar. Fecha a leitura da peça:
 
 > O ponto é a marca. A onda é o alcance. **E o alcance revela o que está lá.**
 
-O que aparece é uma **vista aérea noturna** — malha urbana em linhas finas de
-luz, vista de muito alto. Escolhida entre quatro construídas: as outras três
-(o próprio trabalho dele alternando por batida, arquitetura vista de baixo, e
-céu de longa exposição) ficaram em `estudos/fundo-vivo.html`.
+### Uma imagem, e cada batida mostra um pedaço diferente dela
+
+Houve um rodízio de imagens — primeiro três assuntos (cidade, nó rodoviário,
+delta de rio), depois quatro aéreas noturnas. **Desfeito em 15/09/2026, e o
+motivo é concreto:** quatro aéreas quase iguais não são percebidas como troca.
+Um rodízio que ninguém nota não é um rodízio — é uma imagem só custando quatro
+vezes mais. Eram 305KB por um efeito invisível por construção.
+
+A fonte é `visaoaerea3.png`, escolhida pelo Gabriel entre as quatro. As
+descartadas ficam em `estudos/capturas/` e nos estudos.
 
 | | |
 |---|---|
-| Arquivo | `assets/img/fundo/aerea.webp`, 85KB |
-| Origem | 1,8MB de PNG gerado |
-| Peso do site | 232KB → 321KB |
+| Arquivo | `assets/img/fundo/aerea.webp`, 134KB, 1536x1024, q72 |
+| Peso do site | 581KB (quatro imagens) → **410KB** |
+| Ciclo de enquadramentos | 6, ~25s para fechar a volta |
+
+**Sobrou orçamento para qualidade.** Com quatro imagens o encode tinha de ser
+`quality 42` em 1440px; com uma, é `quality 72` na resolução cheia da fonte.
+O artefato de compressão sumiu, e o arquivo ainda é menos da metade do
+conjunto anterior.
+
+### O zoom é o preço do enquadramento, e ele é literal
+
+A fonte é 3:2 e o hero é 16:9, então sobra altura de graça — mas não sobra
+largura. Para ter folga horizontal a imagem é desenhada **1,15x maior** que o
+necessário: 216px de folga na horizontal, 204px na vertical.
+
+Esse 1,15 custa 15% de nitidez, porque a fonte tem 1536px e não cresce:
+
+| tela | upscale |
+|---|---|
+| 1440 dpr1 | 1,08x — praticamente nativo |
+| 1920 dpr1 | 1,44x |
+| 1512 dpr2 (retina) | 2,26x — contra 1,97x sem o zoom |
+
+**O teto de tudo isto é a resolução da fonte, e ele já valia antes do zoom.**
+Numa tela retina a imagem já era ampliada ~2x. Se um dia a fonte for para
+~3000px, o `ZOOM` pode subir junto e só então.
+
+### Como sei que o deslocamento funciona
+
+Medi errado na primeira vez, e vale registrar o erro: comparei a **média de
+brilho por bloco** entre dois enquadramentos e deu 1,3–1,9 numa escala de 255
+— quase nada. Conclusão aparente: não adianta deslocar.
+
+Estava medindo a propriedade errada. Média por bloco é quase constante numa
+cidade densa justamente porque ela é uniforme em larga escala; o que o olho vê
+é a **feição** — a avenida, o quarteirão grande, o vazio do parque. Medindo
+diferença pixel a pixel:
+
+| | diferença |
+|---|---|
+| mesmo enquadramento (piso) | 0 |
+| deslocado para outro quadro | 11,5 a 11,8 |
+| deslocado **e espelhado** | 11,6 a 11,7 |
+| duas fotos completamente diferentes seriam | 15 a 25 |
+
+O deslocamento entrega quase toda a diferença disponível. E a linha do
+espelhamento é a que mais importa: **espelhar não acrescenta nada** (11,6
+contra 11,5), porque a 216px de distância a textura já está descorrelacionada.
+Por isso não há espelhamento no código — seria truque sem ganho.
 
 **O tratamento está assado no arquivo**, não em `ctx.filter`. Filtrar uma
 imagem inteira 60 vezes por segundo para um efeito que nunca muda é o caminho
 mais caro possível — e dessaturar e escurecer ainda encolheu o arquivo.
 
 **Não há preload.** A imagem só é necessária 1,4s depois do hero entrar;
-prearregá-la a faria disputar banda com as fontes no caminho crítico. Medido:
-baixa em 539ms sozinha.
+precarregá-la a faria disputar banda com as fontes no caminho crítico.
+
+Houve uma **fila** aqui — quatro imagens baixando uma de cada vez, cada uma
+começando quando a anterior terminava — e ela era o que tornava 305KB viável.
+Com um arquivo só a fila perdeu propósito e saiu junto. Se algum dia voltar a
+haver mais de uma imagem, ela precisa voltar também: baixar tudo de uma vez
+põe o que só será usado aos 8s disputando banda com o que é necessário aos
+1,4s.
+
+**O brilho (0,60 assado no arquivo) veio da calibragem contra a `aerea`
+antiga**, que foi a aprovada e medida a 6,9:1. Mantido de propósito ao trocar
+a fonte: mudar a imagem sem mudar a luz é o que permite reaproveitar o teste
+de contraste em vez de refazê-lo do zero.
 
 **A luz acende ATRÁS da frente, não sobre ela.** A primeira versão punha o
 brilho máximo na crista — e a crista é uma banda acesa, que engolia a imagem.
-E não basta ir um pouco para trás: a onda são TRÊS bandas (crista e duas
-ondulações defasadas em 250ms), então o campo só esvazia depois das três. Daí
-`picoAtras = esp * 2 + 250` e uma cauda de 640px.
+E não basta ir um pouco para trás: a onda não é uma banda só. Eram três
+(crista e duas ondulações) quando a frente era circular; desde a frente
+ondulada são duas, defasadas em 280ms — a frente modulada já tem informação
+própria e três ondulações onduladas viram renda. De qualquer forma o campo só
+esvazia depois de todas elas, daí `picoAtras = esp * 2 + 250` e uma cauda de
+640px.
 
 ### O bug que escondeu tudo, e a lição
 
@@ -348,6 +545,26 @@ imagem (cinza neutro).
 instante em que a frente cruza a manchete. É um retângulo arredondado cavado
 com `destination-out`, com penumbra feita por 18 retângulos concêntricos —
 canvas não tem desfoque confiável em toda parte, isto tem.
+
+O **quanto** ela cava é outra conversa, e foi afrouxado em 15/09/2026: estava
+em .985, sobrava 1,5% da imagem, e o Gabriel enxergava a forma do retângulo.
+Esse é o defeito de uma reserva forte demais — ela deixa de proteger e passa a
+desenhar. Hoje o teto é **.78**, quinze vezes mais imagem sobre o título.
+
+Medido com os glifos escondidos, para que toda a faixa do H1 seja fundo puro.
+É o único jeito honesto: a segunda linha é branco a 62%, e qualquer limiar que
+separe os glifos do fundo corta justamente o fundo claro que se quer medir.
+
+| | .985 | .78 |
+|---|---|---|
+| fundo típico | 6,90:1 | 6,90:1 |
+| pior pixel | 5,8:1 | 4,7:1 |
+
+O núcleo não mudou; o que cedeu foi a borda. A batida mais dura é a da
+`aerea`: malha fina tem pixels isolados claros que `delta` e `no` não têm.
+O H1 tem 40-64px, então o mínimo da WCAG AA aqui é **3:1**, não 4,5:1 — mas se
+alguém baixar mais este teto, **meça de novo**: o limite real não é o valor, é
+o pior pixel na batida da `aerea`.
 
 **A conferência de tamanho por quadro.** `ResizeObserver` cobre quase tudo,
 mas basta um caso escapar para bitmap e elemento saírem de sincronia: aí o
