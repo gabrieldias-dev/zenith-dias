@@ -36,6 +36,162 @@ E a interação central: a **convergência** entre `REAL VALUE` e
 
 ---
 
+## O fundo que respira: uma prancha viva atrás de duas seções
+
+O manifesto e `o problema` compartilham um desenho técnico de fundo
+que se mexe. Entrou em 16/09/2026.
+
+### Por que não pôde ser imagem
+
+Começou como WebP. Pixel é morto: dá para mover o arquivo inteiro — e por um
+tempo houve parallax fazendo isso — mas não uma linha dentro dele. O Gabriel
+quis as linhas vivas, e linha viva exige redesenhar. Virou canvas.
+
+### A geometria é medida, não inventada
+
+Saiu do arquivo dele por análise, não por olho:
+
+| o quê | como |
+|---|---|
+| 12 guias verticais | soma de luminância por coluna |
+| quais são tracejadas | continuidade — 5,4% / 24,6% / 63,7% têm ~62% de linha cheia, o resto 100% |
+| 8 círculos | transformada de Hough sobre a imagem reduzida |
+| 20 nós | máximo local **compacto** — mancha clara curta nos DOIS eixos, senão traço de tracejado entra como nó |
+| o ponto azul | pixel mais saturado: 78,2% / 37,8% |
+
+### Uma prancha só, e o que ela custou
+
+As duas seções são janelas do MESMO desenho, que vai do topo do manifesto à
+base de `o problema`. As linhas atravessam a divisa. Medido:
+**14 de 14 guias casam na emenda**, e o desvio máximo de 4px está só nas duas
+diagonais — que é o correto, diagonal muda de x conforme desce.
+
+Isso matou duas coisas que existiam antes, e as duas pela mesma razão:
+
+**O parallax.** Cada seção tinha o seu, calculado da própria posição. Com uma
+prancha só, duas seções andando em ritmos diferentes **rasgariam** o desenho
+na divisa.
+
+**O espelho do manifesto.** Com um lado espelhado e o outro não, as linhas
+não se encontram.
+
+### A força é 0,15, e o limite não é a WCAG
+
+A visibilidade do desenho é limitada pelo **texto mais fraco por cima dele**,
+não pelo desenho. No pior caso possível — linha de branco puro sob a
+micro-tipo — dá 4,72:1; o teto é 0,18, onde fura os 4,5:1.
+
+Mas o limite que valeu foi outro. Em 0,22 a linha clareava o fundo em 54
+níveis e passava a ler como **marca** — e marca cruzando linha de texto
+parece tachado. Em 0,15 são 37 níveis, de volta ao regime de textura.
+**O limite real foi o ruído, não o contraste.**
+
+### As seções ficaram pretas
+
+Chegaram a ser claras. Voltaram ao escuro junto com esta decisão: prancha de
+desenho técnico é preta, e o arquivo nasceu assim — a versão invertida, que
+existiu enquanto o manifesto era claro, foi apagada.
+
+O preço: o site é preto do hero ao pôster. Não é preto liso, porque essas
+duas têm desenho e ele se mexe, mas é um bloco longo.
+
+### A rede de segurança
+
+O CSS mantém a imagem como `::after`. O JS só a esconde — pela
+classe `grade-viva` no `<html>` — **depois** de ter
+criado os dois canvas. Se o módulo falhar no meio, a imagem continua no lugar
+e a seção nunca fica sem fundo. Fora da tela o laço para; movimento reduzido
+desenha um quadro e para.
+
+Custo medido: **0,52 ms por quadro** para as duas telas, contra 16,7 de
+orçamento.
+
+O estudo com os controles de força, vida, velocidade e emenda ficou em
+`estudos/grade-viva.html`.
+
+---
+
+## A ordem das seções, e por que os projetos vinham cedo demais
+
+Reordenado em 16/09/2026. Antes, os projetos começavam em **1,47 tela** de um
+site que tem 16,2 — o argumento inteiro ganhava 0,47 tela antes da prova.
+
+Mas "cedo" era o sintoma. O diagnóstico é que **todo o argumento morava depois
+da prova**: o problema na 4ª posição, a tese na 5ª, o diagrama do Δ na 8ª e o
+filtro de público na 9ª. O site mostrava evidência antes de ter feito o caso —
+os projetos não apareciam cedo, apareciam *sozinhos*, sem pergunta que eles
+respondessem.
+
+E havia uma repetição que ninguém notava porque estavam longe: **`o problema`
+e a `convergência` são o mesmo argumento em dois registros** — um em prosa,
+o outro em desenho — separados por quatro seções.
+
+### A ordem nova
+
+`hero → manifesto → o problema → filosofia → 01 work → convergência →
+02 capabilities → 03 process → cliente ideal → 04 about → pôster → contato`
+
+Sobem `o problema` e `filosofia`; a `convergência` desce para logo depois
+dos projetos. Com isso ela deixa de ser um bis de `o problema` e vira a
+ponte entre "o que fizemos" e "como trabalhamos".
+
+Caminho até os projetos: **2,95 telas**, o dobro.
+
+### As duas descartadas, e o que matou cada uma
+
+**B — o filtro primeiro** (`cliente ideal` logo abaixo do hero). A ideia é
+boa e continua de pé: aquela é a única linha do site que diz a quem ele se
+destina, e está na 9ª posição, quando o visitante já decidiu. O que matou a
+ordem foi a paleta — `cliente ideal` é escura, então emendava escuro com
+escuro e **zerava** o trecho claro depois do hero. A ideia sobrevive de outro
+jeito: a frase vira linha de apoio no hero, sem mover a seção.
+
+**C — o diagrama abrindo o argumento.** Mostrava a medida antes de dizer o que
+estava sendo medido: o Δ de 42% entre `REAL VALUE` e `DIGITAL PERCEPTION` é
+abstrato, e só significa algo depois de "seu site fala antes de você". Ainda
+cobrava 4,27 telas — 26% da página — antes do primeiro projeto.
+
+As três ficaram em `estudos/ordem.html`, com as medidas ao vivo.
+
+### O preço, medido
+
+A faixa clara do topo passou de 0,47 para **1,29 tela**, porque `o problema`
+subiu junto. Em compensação a corrida escura do meio cresceu de 6 para **7
+seções seguidas** — `filosofia` ficou do lado escuro da emenda. Deixar
+`filosofia` clara fecharia o capítulo em 1,95 tela e devolveria a corrida
+para 6; é uma classe, e está em aberto.
+
+---
+
+## A premissa: a seção que existiu por um dia
+
+Ficava entre o manifesto e os projetos, e dizia `Você é avaliado antes de ser
+ouvido` com a tradução ao lado e um fio até a margem com o rótulo `PREMISSA`.
+Tinha nascido em 15/09/2026 de `Criamos a primeira impressão que acontece
+antes da primeira conversa`, e **saiu em 16/09/2026** a pedido do Gabriel.
+
+Nenhuma das duas redações foi o problema. O que não se sustentou foi a
+**seção**: uma frase-pôster entre o manifesto, que já afirma, e os projetos,
+que já provam. Ela repetia a função de um e atrasava o outro.
+
+Fica o diagnóstico, que vale para qualquer seção:
+
+> **Era a única seção do site com exatamente um elemento.** Todas as outras
+> têm pelo menos duas coisas conversando — manchete e parágrafo, manchete e
+> tradução, rótulo e lista. Era por isso que o ar dela lia como inacabado em
+> vez de composto.
+
+A tentativa de consertar isso foi pôr a tradução ao lado e um fio até a
+margem — e funcionou, medido em 1440px. Só que consertar a composição de uma
+seção não responde se ela devia existir. **Essa pergunta vem antes**, e eu
+não fiz na hora.
+
+As cinco frases candidatas e os três tratamentos continuam em
+`estudos/frase.html` (o estudo ainda aponta para `.citacao`, que já não
+existe na página).
+
+---
+
 ## As manchetes são em inglês, e há uma linha em português embaixo
 
 Decisão do Gabriel em 15/09/2026. O inglês nas manchetes de seção é

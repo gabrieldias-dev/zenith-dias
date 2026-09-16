@@ -110,8 +110,10 @@
          decisão do Gabriel em 14/09/2026, para o nome por extenso aparecer
          também em tela pequena. A marca reduzida ZD segue no favicon. -->
     <a class="marca" href="#hero" aria-label="Zenith Dias — início">
-      <img class="marca__larga" src="assets/img/logo/horizontal-negativa.svg"
+      <img class="marca__larga marca--neg" src="assets/img/logo/horizontal-negativa.svg"
            alt="" width="1204" height="176">
+      <img class="marca__larga marca--pos" src="assets/img/logo/horizontal-positiva.svg"
+           alt="" width="1204" height="176" aria-hidden="true">
     </a>
 
     <nav class="nav" aria-label="Navegação principal">
@@ -147,7 +149,6 @@
 </div>
 
 <main id="conteudo">
-
   <!-- ══ HERO ═══════════════════════════════════════════════════════════ -->
   <section class="hero" id="hero">
     <!-- A estrela: um ponto e uma onda que o atravessa. Sem JS fica vazio e
@@ -203,6 +204,9 @@
   </section>
 
   <!-- ══ MANIFESTO ══════════════════════════════════════════════════════ -->
+  <!-- Foi clara (s-light) por um dia. Voltou ao escuro em 16/09/2026: com o
+       desenho tecnico VIVO de fundo, ela e 'o problema' viraram uma prancha
+       so, e prancha de desenho tecnico e preta. Ver DESIGN.md.            -->
   <section class="secao manifesto" aria-labelledby="t-manifesto">
     <div class="rail">
       <div class="manifesto__grid">
@@ -231,15 +235,63 @@
     </div>
   </section>
 
-  <!-- ══ FRASE ISOLADA ══════════════════════════════════════════════════ -->
-  <section class="secao citacao" aria-label="Nossa premissa">
+  <!-- ══ O PROBLEMA ═════════════════════════════════════════════════════
+       Chegou a ser clara (s-light) por um dia. Voltou ao escuro em
+       16/09/2026 a pedido do Gabriel, mas mantendo o desenho de fundo — na
+       polaridade original, fundo preto e linhas claras.                   -->
+  <section class="secao problema" aria-labelledby="t-problema">
     <div class="rail">
-      <p class="citacao__txt" data-linhas>
-        <span class="linha"><span>Criamos a primeira</span></span>
-        <span class="linha"><span>impressão que acontece</span></span>
-        <span class="linha"><span>antes da primeira</span></span>
-        <span class="linha"><span>conversa<i class="pt" aria-hidden="true">•</i></span></span>
-      </p>
+      <div class="problema__grid">
+        <div class="manchete">
+          <h2 class="h2 problema__h2" id="t-problema" data-linhas>
+            <span class="linha"><span>SEU SITE FALA</span></span>
+            <span class="linha"><span>ANTES DE VOCÊ.</span></span>
+          </h2>
+          <p class="rotulo problema__en" data-reveal>YOUR WEBSITE SPEAKS BEFORE YOU DO.</p>
+        </div>
+
+        <div class="problema__txt">
+          <p data-reveal style="--d:.1s">
+            O primeiro contato com uma empresa frequentemente acontece antes de uma
+            conversa, reunião ou proposta. Acontece através de uma tela.
+          </p>
+          <p data-reveal style="--d:.2s">
+            A pergunta não é se sua presença digital está dizendo alguma coisa.
+          </p>
+          <p class="problema__pergunta" data-reveal style="--d:.32s">
+            A pergunta é: <strong>ela está dizendo a coisa certa?</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ FILOSOFIA ══════════════════════════════════════════════════════ -->
+  <section class="secao filosofia" aria-labelledby="t-filosofia">
+    <div class="rail">
+      <div class="filosofia__grid">
+        <div class="manchete">
+          <h2 class="h2" id="t-filosofia" data-linhas>
+            <span class="linha"><span>PERCEPTION</span></span>
+            <span class="linha"><span>IS PART OF</span></span>
+            <span class="linha"><span>THE PRODUCT.</span></span>
+          </h2>
+          <p class="rotulo traducao" data-reveal>PERCEPÇÃO FAZ PARTE DO PRODUTO.</p>
+        </div>
+
+        <div class="filosofia__txt">
+          <p data-reveal>Design não é apenas estética. É percepção.</p>
+          <p data-reveal style="--d:.12s">
+            Cada escolha — tipografia, movimento, fotografia, hierarquia,
+            interação e ritmo — influencia a maneira como uma marca é percebida.
+          </p>
+        </div>
+      </div>
+
+      <blockquote class="destaque" data-reveal style="--d:.2s">
+        <p>We don't decorate businesses.<br><span class="destaque__b">We translate their value.</span></p>
+        <p class="traducao">Não decoramos negócios. Traduzimos o valor deles.</p>
+      </blockquote>
     </div>
   </section>
 
@@ -420,57 +472,46 @@
     </div>
   </section>
 
-  <!-- ══ O PROBLEMA (inverte) ═══════════════════════════════════════════ -->
-  <section class="secao problema s-light" aria-labelledby="t-problema">
-    <div class="rail">
-      <h2 class="h2 problema__h2" id="t-problema" data-linhas>
-        <span class="linha"><span>SEU SITE FALA</span></span>
-        <span class="linha"><span>ANTES DE VOCÊ.</span></span>
-      </h2>
+  <!-- ══ DIFERENCIAL — THE ZENITH POINT ═════════════════════════════════ -->
+  <section class="convergencia" id="convergencia" aria-labelledby="t-conv">
+    <div class="convergencia__pista">
+      <div class="convergencia__palco" id="palco">
+        <div class="rail convergencia__in">
 
-      <p class="rotulo problema__en" data-reveal>YOUR WEBSITE SPEAKS BEFORE YOU DO.</p>
+          <p class="rotulo num-secao">THE ZENITH POINT</p>
+          <h2 class="sr" id="t-conv">A distância entre valor real e percepção digital</h2>
 
-      <div class="problema__txt">
-        <p data-reveal style="--d:.1s">
-          O primeiro contato com uma empresa frequentemente acontece antes de uma
-          conversa, reunião ou proposta. Acontece através de uma tela.
-        </p>
-        <p data-reveal style="--d:.2s">
-          A pergunta não é se sua presença digital está dizendo alguma coisa.
-        </p>
-        <p class="problema__pergunta" data-reveal style="--d:.32s">
-          A pergunta é: <strong>ela está dizendo a coisa certa?</strong>
-        </p>
-      </div>
-    </div>
-  </section>
+          <div class="niveis" aria-hidden="true">
+            <div class="nivel nivel--alto">
+              <span class="nivel__fio"></span>
+              <span class="rotulo nivel__rot">REAL VALUE</span>
+            </div>
 
-  <!-- ══ FILOSOFIA ══════════════════════════════════════════════════════ -->
-  <section class="secao filosofia" aria-labelledby="t-filosofia">
-    <div class="rail">
-      <div class="filosofia__grid">
-        <div class="manchete">
-          <h2 class="h2" id="t-filosofia" data-linhas>
-            <span class="linha"><span>PERCEPTION</span></span>
-            <span class="linha"><span>IS PART OF</span></span>
-            <span class="linha"><span>THE PRODUCT.</span></span>
-          </h2>
-          <p class="rotulo traducao" data-reveal>PERCEPÇÃO FAZ PARTE DO PRODUTO.</p>
-        </div>
+            <div class="cota">
+              <span class="cota__seta cota__seta--cima"></span>
+              <span class="cota__fio"></span>
+              <span class="rotulo cota__delta">Δ <b id="conv-delta">42</b>%</span>
+              <span class="cota__seta cota__seta--baixo"></span>
+            </div>
 
-        <div class="filosofia__txt">
-          <p data-reveal>Design não é apenas estética. É percepção.</p>
-          <p data-reveal style="--d:.12s">
-            Cada escolha — tipografia, movimento, fotografia, hierarquia,
-            interação e ritmo — influencia a maneira como uma marca é percebida.
+            <div class="nivel nivel--baixo">
+              <span class="nivel__fio"></span>
+              <span class="rotulo nivel__rot">DIGITAL PERCEPTION</span>
+            </div>
+
+            <span class="ponto-zenith" id="ponto-zenith">
+              <i class="ponto-zenith__halo"></i>
+              <i class="ponto-zenith__nucleo"></i>
+              <span class="rotulo ponto-zenith__rot">THE ZENITH POINT <i>•</i></span>
+            </span>
+          </div>
+
+          <p class="convergencia__txt">
+            Nosso trabalho é diminuir a distância entre o valor que sua empresa
+            possui e o valor que o público percebe.
           </p>
         </div>
       </div>
-
-      <blockquote class="destaque" data-reveal style="--d:.2s">
-        <p>We don't decorate businesses.<br><span class="destaque__b">We translate their value.</span></p>
-        <p class="traducao">Não decoramos negócios. Traduzimos o valor deles.</p>
-      </blockquote>
     </div>
   </section>
 
@@ -582,49 +623,6 @@
         <span class="linha"><span>seu site precisa fazer</span></span>
         <span class="linha"><span>as pessoas perceberem<i class="pt" aria-hidden="true">•</i></span></span>
       </p>
-    </div>
-  </section>
-
-  <!-- ══ DIFERENCIAL — THE ZENITH POINT ═════════════════════════════════ -->
-  <section class="convergencia" id="convergencia" aria-labelledby="t-conv">
-    <div class="convergencia__pista">
-      <div class="convergencia__palco" id="palco">
-        <div class="rail convergencia__in">
-
-          <p class="rotulo num-secao">THE ZENITH POINT</p>
-          <h2 class="sr" id="t-conv">A distância entre valor real e percepção digital</h2>
-
-          <div class="niveis" aria-hidden="true">
-            <div class="nivel nivel--alto">
-              <span class="nivel__fio"></span>
-              <span class="rotulo nivel__rot">REAL VALUE</span>
-            </div>
-
-            <div class="cota">
-              <span class="cota__seta cota__seta--cima"></span>
-              <span class="cota__fio"></span>
-              <span class="rotulo cota__delta">Δ <b id="conv-delta">42</b>%</span>
-              <span class="cota__seta cota__seta--baixo"></span>
-            </div>
-
-            <div class="nivel nivel--baixo">
-              <span class="nivel__fio"></span>
-              <span class="rotulo nivel__rot">DIGITAL PERCEPTION</span>
-            </div>
-
-            <span class="ponto-zenith" id="ponto-zenith">
-              <i class="ponto-zenith__halo"></i>
-              <i class="ponto-zenith__nucleo"></i>
-              <span class="rotulo ponto-zenith__rot">THE ZENITH POINT <i>•</i></span>
-            </span>
-          </div>
-
-          <p class="convergencia__txt">
-            Nosso trabalho é diminuir a distância entre o valor que sua empresa
-            possui e o valor que o público percebe.
-          </p>
-        </div>
-      </div>
     </div>
   </section>
 

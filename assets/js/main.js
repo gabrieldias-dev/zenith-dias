@@ -22,6 +22,7 @@
   html.classList.add('zd-ok');   // avisa a rede de seguranca do <head> que o JS chegou
   var calmo = window.matchMedia('(prefers-reduced-motion: reduce)');
   var fino = window.matchMedia('(pointer: fine) and (min-width: 64rem)');
+  var fone = window.matchMedia('(max-width: 47.99rem)');
 
   function q(s, ctx) { return (ctx || document).querySelector(s); }
   function qa(s, ctx) { return Array.prototype.slice.call((ctx || document).querySelectorAll(s)); }
@@ -467,17 +468,56 @@
       ctx.restore();
     }
 
+    /* ONDE O PONTO FICA.
+       No desktop, 70% x 30% — o canto alto direito, longe do titulo.
+
+       No CELULAR isso nao serve, e a causa nao era a que parecia. O que
+       cobria o texto nao era a POSICAO e sim o HALO: 46px fixos sao 12% da
+       largura de um aparelho de 375. Medido em 16/09/2026, o halo invadia o
+       eyebrow em 375x667, 360x800 e 390x844 — nos tres.
+
+       Entao no celular duas coisas mudam:
+
+       1. O HALO ENCOLHE junto com a tela. O nucleo de 5px nao muda: ele e a
+          marca, e a marca nao cresce nem diminui (ver o comentario do clarao).
+
+       2. O PONTO SOBE para a faixa entre o header e o eyebrow, que e o unico
+          respiro do hero la em cima. E a posicao e MEDIDA, nao chutada por
+          fracao, porque essa faixa muda demais de aparelho para aparelho:
+          68px em 375x667 contra 165px em 390x844. Fracao fixa acerta um e
+          erra o outro. O centro da faixa e o que maximiza a menor folga.
+
+       O x vai de .70 para .74 — mais a direita, como o Gabriel pediu, mas
+       ainda a esquerda da borda do botao MENU nos aparelhos medidos.        */
+    function origem() {
+      var o = { x: larg * 0.70, y: alt * 0.30, halo: 46 };
+      if (!fone.matches) return o;
+
+      o.x = larg * 0.74;
+      o.halo = Math.min(46, larg * 0.075);
+
+      var cab = q('#cabeca'), olho = q('.hero__eyebrow');
+      if (!cab || !olho) { o.y = alt * 0.20; return o; }
+      var rc = cv.getBoundingClientRect();
+      var topo = cab.getBoundingClientRect().bottom - rc.top;
+      var base = olho.getBoundingClientRect().top - rc.top;
+      if (base - topo < 24) { o.y = alt * 0.20; return o; }  /* faixa sumiu */
+      o.y = (topo + base) / 2;
+      return o;
+    }
+
     function quadro(t) {
       if (!larg || !alt) return;
       ctx.clearRect(0, 0, larg, alt);
 
-      var cx = larg * 0.70, cy = alt * 0.30;
+      var org = origem();
+      var cx = org.x, cy = org.y;
       var diag = Math.sqrt(larg * larg + alt * alt);
 
       /* Repouso: o ponto sozinho no preto e um pixel perdido. O halo da a
          ele corpo de estrela sem desenhar linha nenhuma. */
       var resp = 1 + 0.07 * Math.sin(t / 2800);
-      var rh = 46 * resp;
+      var rh = org.halo * resp;
       var halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, rh);
       halo.addColorStop(0, cor(0.30));
       halo.addColorStop(0.35, cor(0.09));
@@ -621,6 +661,218 @@
     confere();
   }
 
+  /* ══ 03d A GRADE VIVA ═══════════════════════════════════════════════════
+     O fundo do manifesto e d'o problema. Era um WebP; virou desenho.
+
+     POR QUE NAO PODIA SER IMAGEM: pixel e morto. Da para mover o arquivo
+     inteiro, nao uma linha dentro dele. O Gabriel quis as linhas vivas, e
+     linha viva exige redesenhar.
+
+     A GEOMETRIA E MEDIDA, NAO INVENTADA. Saiu do arquivo dele: as guias por
+     soma de coluna, o tracejado por continuidade (5,4% / 24,6% / 63,7% tem
+     ~62% de linha cheia, o resto tem 100%), os circulos por transformada de
+     Hough, os nos por maximo local compacto — mancha clara curta nos DOIS
+     eixos, senao traco de tracejado entra como no.
+
+     UMA PRANCHA SO. As duas secoes sao janelas da MESMA prancha, que vai do
+     topo do manifesto ate a base d'o problema: as linhas atravessam a divisa
+     em vez de recomecar. Foi isso que matou o parallax que existia aqui —
+     com duas secoes andando em ritmos diferentes, o desenho rasgava na
+     emenda. Matou tambem o espelho que o manifesto tinha, pela mesma razao.
+
+     Tudo em fracao do desenho original, 1672x941.                          */
+  var GRADE = {
+    LARG: 1672, ALT: 941,
+    VEL: 2,                     /* "rapida" no estudo — escolha do Gabriel */
+
+    VERT: [
+      { x: .054, tr: 1 }, { x: .097, tr: 0 }, { x: .246, tr: 1 }, { x: .401, tr: 0 },
+      { x: .453, tr: 0 }, { x: .637, tr: 1 }, { x: .667, tr: 0 }, { x: .783, tr: 0 },
+      { x: .888, tr: 0 }, { x: .898, tr: 0 }, { x: .910, tr: 0 }, { x: .949, tr: 0 }
+    ],
+    HORIZ: [
+      { y: .375, f: 1 }, { y: .528, f: 1 },
+      { y: .269, f: .55 }, { y: .700, f: .5 }, { y: .882, f: .5 }
+    ],
+    CIRC: [
+      { cx: .280, cy: .268, r: .036, tr: 0 },
+      { cx: .919, cy: .650, r: .032, tr: 0 },
+      { cx: .079, cy: .535, r: .047, tr: 1 },
+      { cx: .797, cy: .395, r: .180, tr: 0 },
+      { cx: .783, cy: .382, r: .111, tr: 1 },
+      { cx: .201, cy: .344, r: .043, tr: 1 },
+      { cx: .248, cy: .882, r: .123, tr: 1 },
+      { cx: -.010, cy: .060, r: .115, tr: 0 }
+    ],
+    DIAG: [
+      [.093, .271, .248, .531], [.215, .069, .093, .271], [.400, .882, .783, .526],
+      [.532, .000, .637, .260], [.637, .260, .783, .526], [.000, .786, .248, .531],
+      [.783, .526, .955, .812]
+    ],
+    NOS: [
+      [.949, .067], [.217, .069], [.010, .070], [.638, .259], [.096, .269], [.246, .269],
+      [.282, .271], [.401, .373], [.097, .374], [.162, .526], [.636, .526], [.782, .526],
+      [.949, .526], [.452, .527], [.246, .528], [.948, .654], [.053, .790], [.948, .814],
+      [.162, .865], [.400, .883]
+    ],
+    AZUL: [.782, .378]
+  };
+
+  function gradeViva() {
+    var secoes = qa('.manifesto, .problema');
+    if (secoes.length < 2) return;
+    if (!document.createElement('canvas').getContext) return;
+
+    var telas = secoes.map(function (sec) {
+      var cv = document.createElement('canvas');
+      cv.className = 'grade';
+      cv.setAttribute('aria-hidden', 'true');
+      sec.insertBefore(cv, sec.firstChild);
+      return { sec: sec, cv: cv, ctx: cv.getContext('2d'), w: 0, h: 0, dpr: 0 };
+    });
+
+    /* So agora a imagem do CSS sai de cena. Se qualquer coisa acima tivesse
+       falhado, a secao ficaria sem fundo nenhum. */
+    html.classList.add('grade-viva');
+
+    var y0 = 0, hv = 0, laco = null, visivel = false, t0 = 0;
+
+    function mede() {
+      var a = telas[0].sec, b = telas[telas.length - 1].sec;
+      y0 = a.offsetTop;
+      hv = (b.offsetTop + b.offsetHeight) - y0;
+      telas.forEach(function (T) {
+        var r = T.sec.getBoundingClientRect();
+        var w = Math.round(r.width), h = Math.round(r.height);
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        if (T.w === w && T.h === h && T.dpr === dpr) return;
+        T.w = w; T.h = h; T.dpr = dpr;
+        T.cv.width = Math.round(w * dpr); T.cv.height = Math.round(h * dpr);
+        T.cv.style.width = w + 'px'; T.cv.style.height = h + 'px';
+      });
+    }
+
+    function traca(T, tempo) {
+      var ctx = T.ctx, W = T.cv.width / T.dpr, H = T.cv.height / T.dpr;
+      ctx.setTransform(T.dpr, 0, 0, T.dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+
+      /* A prancha cobre a largura e a altura das DUAS secoes somadas; esta
+         tela mostra a sua fatia. O -rel e o que emenda uma na outra. */
+      var esc = Math.max(W / GRADE.LARG, hv / GRADE.ALT);
+      var dw = GRADE.LARG * esc, dh = GRADE.ALT * esc;
+      var rel = T.sec.offsetTop - y0, sobra = dh - hv;
+      var ox = -(dw - W) / 2, oy = -rel - sobra / 2;
+
+      var X = function (f) { return ox + f * dw; };
+      var Y = function (f) { return oy + f * dh; };
+      var R = function (f) { return f * dw; };
+
+      var t = tempo * GRADE.VEL;
+      var cor = function (a) { return 'rgba(241, 240, 235, ' + a + ')'; };
+      ctx.lineWidth = 1;
+
+      GRADE.VERT.forEach(function (g, i) {
+        ctx.strokeStyle = cor(g.tr ? .75 : .55);
+        if (g.tr) { ctx.setLineDash([7, 9]); ctx.lineDashOffset = -(t / 38) % 16; }
+        else ctx.setLineDash([]);
+        var d = (i === 3 || i === 8) ? Math.sin(t / 4200 + i) * R(.006) : 0;
+        ctx.beginPath(); ctx.moveTo(X(g.x) + d, 0); ctx.lineTo(X(g.x) + d, H); ctx.stroke();
+      });
+
+      ctx.setLineDash([]);
+      GRADE.HORIZ.forEach(function (g) {
+        ctx.strokeStyle = cor(.55 * (g.f || 1));
+        ctx.beginPath(); ctx.moveTo(0, Y(g.y)); ctx.lineTo(W, Y(g.y)); ctx.stroke();
+      });
+
+      ctx.strokeStyle = cor(.5);
+      GRADE.DIAG.forEach(function (d, i) {
+        var s = Math.sin(t / 5200 + i * 1.7) * R(.004);
+        ctx.beginPath(); ctx.moveTo(X(d[0]), Y(d[1]) + s); ctx.lineTo(X(d[2]), Y(d[3]) + s); ctx.stroke();
+      });
+
+      GRADE.CIRC.forEach(function (c, i) {
+        ctx.strokeStyle = cor(c.tr ? .7 : .5);
+        if (c.tr) { ctx.setLineDash([6, 8]); ctx.lineDashOffset = (t / 52) % 14; }
+        else ctx.setLineDash([]);
+        var gr = (i === 3) ? Math.sin(t / 6400) * R(.003) : 0;
+        ctx.beginPath(); ctx.arc(X(c.cx), Y(c.cy), Math.max(0, R(c.r) + gr), 0, Math.PI * 2); ctx.stroke();
+      });
+
+      /* os nos — e daqui que vem o "vivo" */
+      ctx.setLineDash([]);
+      GRADE.NOS.forEach(function (n, i) {
+        var y = Y(n[1]);
+        if (y < -60 || y > H + 60) return;          // fora desta janela
+        var p = 0.5 + 0.5 * Math.sin(t / 2600 + i * 1.37);
+        var x = X(n[0]), r = R(.0016) * (1 + p * 0.9), halo = r * 4.5;
+        var g = ctx.createRadialGradient(x, y, 0, x, y, halo);
+        g.addColorStop(0, 'rgba(241, 240, 235, ' + (0.30 * p).toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(241, 240, 235, 0)');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, halo, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = cor(0.55 + 0.45 * p);
+        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      });
+
+      /* o Zenith Point: pulso proprio, mais lento que os nos */
+      var ay = Y(GRADE.AZUL[1]);
+      if (ay > -80 && ay < H + 80) {
+        var pa = 0.5 + 0.5 * Math.sin(t / 4100);
+        var ax = X(GRADE.AZUL[0]), ar = R(.0022) * (1 + pa * 0.75);
+        var ga = ctx.createRadialGradient(ax, ay, 0, ax, ay, ar * 6);
+        ga.addColorStop(0, 'rgba(106, 116, 238, ' + (0.42 * pa).toFixed(3) + ')');
+        ga.addColorStop(1, 'rgba(106, 116, 238, 0)');
+        ctx.fillStyle = ga; ctx.beginPath(); ctx.arc(ax, ay, ar * 6, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = 'rgba(106, 116, 238, ' + (0.7 + 0.3 * pa).toFixed(3) + ')';
+        ctx.beginPath(); ctx.arc(ax, ay, ar, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+
+    function desenha(tempo) {
+      mede();
+      var vh = window.innerHeight;
+      telas.forEach(function (T) {
+        var r = T.sec.getBoundingClientRect();
+        if (r.bottom < -60 || r.top > vh + 60) return;
+        traca(T, tempo);
+      });
+    }
+
+    function passo(ts) {
+      laco = requestAnimationFrame(passo);
+      if (!t0) t0 = ts;
+      desenha(ts - t0);
+    }
+
+    /* Fora da tela o laco para: e fundo de duas secoes, nao ha por que gastar
+       bateria desenhando o que ninguem ve. Movimento reduzido tambem para,
+       mas com um quadro desenhado — a grade continua la, so nao anda. */
+    function confere() {
+      var deve = visivel && !calmo.matches;
+      if (deve && !laco) { t0 = 0; laco = requestAnimationFrame(passo); }
+      else if (!deve && laco) { cancelAnimationFrame(laco); laco = null; }
+      /* Desenha SEMPRE que o estado muda, inclusive ao ligar o laco: se o rAF
+         estiver estrangulado — aba voltando do fundo — o primeiro quadro
+         demoraria e a secao apareceria sem fundo nenhum. */
+      desenha(0);
+    }
+
+    if ('IntersectionObserver' in window) {
+      var obs = new IntersectionObserver(function (es) {
+        visivel = es.some(function (e) { return e.isIntersecting; });
+        confere();
+      }, { threshold: 0 });
+      telas.forEach(function (T) { obs.observe(T.sec); });
+    } else { visivel = true; }
+
+    if (calmo.addEventListener) calmo.addEventListener('change', confere);
+    window.addEventListener('resize', function () { if (!laco) desenha(0); });
+
+    desenha(0);
+    confere();
+  }
+
   /* ══ 04 SCROLL — um laço só ═════════════════════════════════════════════ */
   function scroll() {
     var cabeca = q('#cabeca');
@@ -630,6 +882,9 @@
     var conv = q('#convergencia');
     var pista = conv ? q('.convergencia__pista', conv) : null;
     var delta = q('#conv-delta');
+
+    /* as secoes de paleta clara, para o header saber quando inverter */
+    var claras = qa('.s-light');
 
     var agendado = false;
     var ultimoSp = -1;
@@ -641,7 +896,22 @@
       var vh = window.innerHeight;
 
       /* header */
-      if (cabeca) cabeca.classList.toggle('is-fixo', y > 24);
+      if (cabeca) {
+        cabeca.classList.toggle('is-fixo', y > 24);
+
+        /* A barra inverte quando o meio dela esta dentro de uma secao clara.
+           O meio, e nao a borda: assim a virada acontece no centro da barra
+           em vez de piscar duas vezes na passagem de uma secao para a outra. */
+        if (claras.length) {
+          var meio = cabeca.offsetHeight / 2;
+          var claro = false;
+          for (var i = 0; i < claras.length; i++) {
+            var rc = claras[i].getBoundingClientRect();
+            if (rc.top <= meio && rc.bottom > meio) { claro = true; break; }
+          }
+          cabeca.classList.toggle('is-claro', claro);
+        }
+      }
 
       /* medidor: 00 embaixo, 100• em cima */
       var alcance = (html.scrollHeight - vh) || 1;
@@ -1030,7 +1300,7 @@
     /* Cada módulo é isolado: um erro em qualquer um deles não pode impedir os
        reveals de rodar, senão a página inteira fica invisível. */
     [fatiaPalavras, canais, servicos, menu, form, scroll, navAtual,
-     cursor, magnetismo, plantas].forEach(function (modulo) {
+     cursor, magnetismo, plantas, gradeViva].forEach(function (modulo) {
       try { modulo(); } catch (e) {
         if (window.console) console.error('[zenith] módulo falhou:', e);
       }

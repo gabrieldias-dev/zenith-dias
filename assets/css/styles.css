@@ -490,14 +490,34 @@ html.menu-aberto .medidor { opacity: 0; }
 .medidor__marca b { font-weight: 400; }
 
 /* ── 10 HEADER ────────────────────────────────────────────────────────── */
+/* O header e fixo e nao sabe o que passa atras dele. Com secoes claras no
+   caminho, a barra do is-fixo virava uma tarja escura sobre branco. Estas
+   variaveis sao a fonte unica da cor do header; o JS so troca .is-claro.
+
+   E a mesma ideia que o medidor ja resolve sozinho com mix-blend-mode:
+   difference — sobreposto se adapta ao que esta embaixo. Aqui nao da para
+   usar blend porque o logo e imagem e o texto precisa de contraste medido. */
 .cabeca {
+  --cab-fg:       rgba(241, 240, 235, .62);
+  --cab-forte:    var(--lunar-white);
+  --cab-borda:    rgba(241, 240, 235, .22);
+  --cab-barra:    rgba(9, 10, 12, .72);
+  --cab-fio:      rgba(241, 240, 235, .1);
+
   position: fixed; inset: 0 0 auto; z-index: 100;
   transition: background .5s var(--e-out), border-color .5s var(--e-out);
   border-bottom: 1px solid transparent;
 }
+.cabeca.is-claro {
+  --cab-fg:       rgba(9, 10, 12, .66);
+  --cab-forte:    var(--zenith-black);
+  --cab-borda:    rgba(9, 10, 12, .24);
+  --cab-barra:    rgba(241, 240, 235, .76);
+  --cab-fio:      rgba(9, 10, 12, .1);
+}
 .cabeca.is-fixo {
-  background: rgba(9, 10, 12, .72);
-  border-bottom-color: rgba(241, 240, 235, .1);
+  background: var(--cab-barra);
+  border-bottom-color: var(--cab-fio);
   -webkit-backdrop-filter: blur(18px) saturate(1.2);
   backdrop-filter: blur(18px) saturate(1.2);
 }
@@ -513,7 +533,11 @@ html.menu-aberto .medidor { opacity: 0; }
   transition: opacity .4s var(--e-out);
 }
 .marca:hover { opacity: .78; }
-.marca img { height: auto; }
+.marca { position: relative; }
+.marca img { height: auto; transition: opacity .45s var(--e-out); }
+.marca--pos { position: absolute; left: 0; top: 0; opacity: 0; }
+.cabeca.is-claro .marca--neg { opacity: 0; }
+.cabeca.is-claro .marca--pos { opacity: 1; }
 /* Assinatura horizontal em toda largura. 132px é escolha do Gabriel
    (14/09/2026), 27% abaixo do mínimo de 180px do brandbook — ver DESIGN.md.
    No celular ela encolhe um pouco mais, senão divide a barra com o botão
@@ -528,7 +552,7 @@ html.menu-aberto .medidor { opacity: 0; }
 .nav a {
   position: relative;
   font-family: var(--sans); font-size: var(--t-rotulo);
-  letter-spacing: var(--track-rotulo); color: rgba(241, 240, 235, .62);
+  letter-spacing: var(--track-rotulo); color: var(--cab-fg);
   padding-block: .25rem;
   transition: color .35s var(--e-out);
 }
@@ -538,18 +562,18 @@ html.menu-aberto .medidor { opacity: 0; }
   transform: scaleX(0); transform-origin: left;
   transition: transform .5s var(--e-out);
 }
-.nav a:hover { color: var(--lunar-white); }
+.nav a:hover { color: var(--cab-forte); }
 .nav a:hover::after { transform: scaleX(1); }
-.nav a.is-atual { color: var(--lunar-white); }
-.nav a.is-atual::after { transform: scaleX(1); background: rgba(241, 240, 235, .3); }
+.nav a.is-atual { color: var(--cab-forte); }
+.nav a.is-atual::after { transform: scaleX(1); background: var(--cab-fg); }
 
 .cta-topo {
   display: none; align-items: center; gap: .55em;
   border-radius: var(--raio);
   font-family: var(--sans); font-size: var(--t-rotulo); letter-spacing: var(--track-rotulo);
-  color: var(--lunar-white);
+  color: var(--cab-forte);
   padding: .6rem 1rem;
-  border: 1px solid rgba(241, 240, 235, .22);
+  border: 1px solid var(--cab-borda);
   transition: border-color .4s var(--e-out), background .4s var(--e-out);
 }
 @media (min-width: 60rem) { .cta-topo { display: inline-flex; } }
@@ -560,7 +584,7 @@ html.menu-aberto .medidor { opacity: 0; }
 .menu-btn {
   display: inline-flex; align-items: center; gap: .6rem;
   margin-left: auto; padding: .4rem 0;
-  color: var(--lunar-white); cursor: pointer;
+  color: var(--cab-forte); cursor: pointer;
 }
 @media (min-width: 60rem) { .menu-btn { display: none; } }
 .menu-btn__t { font-family: var(--sans); font-size: var(--t-rotulo); letter-spacing: var(--track-rotulo); }
@@ -735,6 +759,46 @@ html.menu-aberto .medidor { opacity: 0; }
 .scroll-ind  { translate: -50% calc(var(--hs, 0) * -1.1rem); }
 
 /* ── 13 MANIFESTO ─────────────────────────────────────────────────────── */
+/* ── FUNDO: A GRADE VIVA ──────────────────────────────────────────────────
+   As duas seções compartilham UMA PRANCHA de desenho técnico que atravessa a
+   divisa entre elas. Quem desenha é o canvas do módulo 03d; o que está aqui
+   embaixo é a REDE DE SEGURANÇA.
+
+   O arquivo do Gabriel nasceu preto com linhas claras e é usado cru — as duas
+   seções são escuras. A versão invertida que existiu para o manifesto claro
+   foi apagada junto com a decisão.
+
+   A FORÇA é 0,15 e não é palpite. Ela não é limitada pelo desenho e sim pelo
+   TEXTO MAIS FRACO por cima dele: no pior caso possível — linha de branco
+   puro sob a micro-tipo — dá 4,72:1, e o teto real é 0,18, onde fura os 4,5:1
+   da WCAG. Em 0,22 a linha deixava de ler como textura e virava MARCA, e
+   marca cruzando linha de texto parece tachado; por isso não subiu mais.  */
+.manifesto, .problema {
+  /* isolation: o z-index negativo da camada fica ATRÁS do conteúdo e à FRENTE
+     do fundo da seção, sem escapar para o contexto de cima. */
+  isolation: isolate;
+}
+
+.manifesto::after,
+.problema::after {
+  content: '';
+  position: absolute; inset: 0; z-index: -1;
+  background: url('../img/fundo/grade-negativa.webp') center / cover no-repeat;
+  opacity: var(--grade, .15);
+  pointer-events: none;
+}
+
+/* O canvas só toma o lugar da imagem depois de existir de verdade. A classe
+   vem do JS DEPOIS que as telas foram criadas — se o módulo falhar no meio,
+   a imagem continua no lugar e a seção nunca fica sem fundo. */
+.grade {
+  position: absolute; inset: 0; z-index: -1;
+  pointer-events: none;
+  opacity: var(--grade, .15);
+}
+.grade-viva .manifesto::after,
+.grade-viva .problema::after { display: none; }
+
 .manifesto__grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }
 @media (min-width: 60rem) {
   .manifesto__grid { grid-template-columns: 1.15fr .85fr; align-items: start; }
@@ -746,16 +810,6 @@ html.menu-aberto .medidor { opacity: 0; }
 }
 @media (min-width: 60rem) { .manifesto__txt { padding-top: .6rem; } }
 .manifesto__tag { margin-top: .75rem; }
-
-/* ── 14 CITAÇÃO ───────────────────────────────────────────────────────── */
-.citacao { padding-block: clamp(7rem, 20vh, 16rem); }
-.citacao__txt {
-  font-size: var(--t-h2);
-  font-weight: 400;
-  line-height: 1.06;
-  letter-spacing: -.035em;
-  max-width: 22ch;
-}
 
 /* ── 15 PROJETOS ──────────────────────────────────────────────────────── */
 .trabalho { padding-bottom: clamp(4rem, 9vh, 7rem); }
@@ -944,19 +998,35 @@ html.menu-aberto .medidor { opacity: 0; }
 
 /* ── 16 O PROBLEMA ────────────────────────────────────────────────────── */
 .problema { padding-block: clamp(7rem, 18vh, 14rem); }
+
+/* Era uma pilha escalonada: manchete no alto à esquerda, texto embaixo à
+   direita. Virou duas colunas com os lados invertidos — escolha do Gabriel
+   em 16/09/2026.
+
+   A troca é de COLUNA, não de ordem no DOM: a manchete continua sendo o
+   primeiro filho, porque é o cabeçalho da seção e o aria-labelledby aponta
+   para ela. Leitor de tela e navegação por cabeçalho seguem na ordem certa;
+   só o olho vê invertido. */
+.problema__grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }
+@media (min-width: 60rem) {
+  .problema__grid { grid-template-columns: .95fr 1.05fr; align-items: start; }
+  .problema__grid .manchete { grid-column: 2; grid-row: 1; }
+  .problema__txt { grid-column: 1; grid-row: 1; }
+  /* a caixa do H2 começa acima da altura-x: sem isso a primeira linha do
+     texto parece mais alta que a manchete. Mesmo ajuste de manifesto e
+     filosofia. */
+  .problema__txt { padding-top: .5rem; }
+}
 .problema__h2 { max-width: 16ch; }
 .problema__en {
   margin-top: clamp(1.5rem, 3vh, 2.25rem);
   color: var(--fg-faint);
 }
 .problema__txt {
-  margin-top: clamp(3rem, 8vh, 6rem);
-  margin-left: auto;
   max-width: 48ch;
   display: flex; flex-direction: column; gap: 1.25rem;
   color: var(--fg-dim);
 }
-@media (min-width: 60rem) { .problema__txt { width: 52%; } }
 .problema__pergunta { font-size: var(--t-corpo); line-height: 1.4; letter-spacing: -.015em; }
 .problema__pergunta strong { color: var(--fg); }
 
@@ -1415,6 +1485,7 @@ html.menu-aberto .medidor { opacity: 0; }
   .loader { display: none !important; }
   .cursor { display: none !important; }
   .scroll-ind__fio i { animation: none; transform: none; height: 45%; }
+  /* a grade nao anda: o JS desenha um quadro so e para */
   /* a estrela nao bate: o JS desenha so o ponto parado */
   .planta, .planta__b { transform: none !important; }
 
@@ -1429,7 +1500,6 @@ html.menu-aberto .medidor { opacity: 0; }
 /* ── 27 AJUSTES DE TELA PEQUENA ───────────────────────────────────────────
    Mobile não é o desktop comprimido: muda hierarquia, não só tamanho. */
 @media (max-width: 47.99rem) {
-  .citacao__txt { max-width: 18ch; }
   .hero { min-height: 92svh; }
   .hero__h1 { margin-bottom: 2rem; }
   .hero__acoes { width: 100%; }
