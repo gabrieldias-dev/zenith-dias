@@ -734,9 +734,16 @@
   };
 
   function gradeViva() {
-    /* TRÊS seções na mesma prancha desde 16/09/2026. A filosofia entrou com
-       o papel virado: fundo claro, tinta escura. O desenho não recomeça nela
-       — continua, e só a polaridade muda. */
+    /* TRÊS seções na mesma prancha. A filosofia entrou com o papel virado:
+       fundo claro, tinta escura. O desenho não recomeça nela — continua, e
+       só a polaridade muda.
+
+       Houve uma tentativa de estender isto a TODAS as seções, em 17/09/2026,
+       com a prancha virando ladrilho espelhado que se repetia página afora.
+       Desfeita no mesmo dia: o Gabriel não gostou do resultado, e a medição
+       já tinha mostrado que três seções ficariam de fora de qualquer jeito —
+       o texto azul de 12px caía de 5,04:1 para 3,42:1, e não havia opacidade
+       que servisse aos dois. */
     var secoes = qa('.manifesto, .problema, .filosofia');
     if (secoes.length < 2) return;
     if (!document.createElement('canvas').getContext) return;
@@ -777,10 +784,11 @@
       ctx.setTransform(T.dpr, 0, 0, T.dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
 
-      /* A prancha cobre a largura e a altura das DUAS secoes somadas; esta
-         tela mostra a sua fatia. O -rel e o que emenda uma na outra. */
       var esc = Math.max(W / GRADE.LARG, hv / GRADE.ALT);
       var dw = GRADE.LARG * esc, dh = GRADE.ALT * esc;
+
+      /* A prancha cobre a largura e a altura das TRÊS seções somadas; esta
+         tela mostra a sua fatia. O -rel é o que emenda uma na outra. */
       var rel = T.sec.offsetTop - y0, sobra = dh - hv;
       var oy = -rel - sobra / 2;
 
@@ -913,6 +921,22 @@
     window.addEventListener('resize', function () { if (!laco) desenha(performance.now()); });
 
     confere();
+  }
+
+  /* ══ 03e A ASSINATURA ═══════════════════════════════════════════════════
+     Gatilho proprio, com 55% do bloco na tela. O data-reveal do site dispara
+     com 12%, e com 12% a escrita terminava enquanto o bloco ainda espiava
+     pela borda de baixo — ninguem via acontecer. */
+  function assinatura() {
+    var bloco = q('[data-assina]');
+    if (!bloco) return;
+    if (calmo.matches || !('IntersectionObserver' in window)) {
+      bloco.classList.add('is-assinada');
+      return;
+    }
+    new IntersectionObserver(function (es, obs) {
+      if (es[0].isIntersecting) { obs.disconnect(); bloco.classList.add('is-assinada'); }
+    }, { threshold: 0.55 }).observe(bloco);
   }
 
   /* ══ 04 SCROLL — um laço só ═════════════════════════════════════════════ */
@@ -1342,7 +1366,7 @@
     /* Cada módulo é isolado: um erro em qualquer um deles não pode impedir os
        reveals de rodar, senão a página inteira fica invisível. */
     [fatiaPalavras, canais, servicos, menu, form, scroll, navAtual,
-     cursor, magnetismo, plantas, gradeViva].forEach(function (modulo) {
+     cursor, magnetismo, plantas, gradeViva, assinatura].forEach(function (modulo) {
       try { modulo(); } catch (e) {
         if (window.console) console.error('[zenith] módulo falhou:', e);
       }

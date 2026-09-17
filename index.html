@@ -684,6 +684,42 @@
           </p>
         </div>
 
+        <div class="sobre__lado">
+          <!-- O BLOCO DE ASSINATURA, como o desenhista assina uma prancha.
+               Ele fecha o argumento do estúdio antes da ficha de quem o
+               fundou — a empresa assina, e depois se identifica.
+
+               A primeira versão revelava a marca por clip-path, da esquerda
+               para a direita. O Gabriel apontou o defeito conceitual: recorte
+               mostra uma forma que JÁ EXISTE, e não dá impressão de escrita.
+
+               Esta é uma caligrafia desenhada à mão em path de LINHA ÚNICA,
+               em seis traços, animada por stroke-dashoffset. O traço segue o
+               caminho da caneta — sobe, desce, volta — e é isso que lê como
+               alguém escrevendo na hora.
+
+               A ordem é a que a mão faria: "Zenith" de uma vez, levanta a
+               caneta, o "D", o "ias", a barra do t e os dois pingos.
+               pathLength="1" em todos: assim o dasharray não depende do
+               comprimento real de cada traço. -->
+          <figure class="assinatura" data-assina>
+          <svg class="assinatura__firma" viewBox="0 0 560 180" role="img"
+               aria-label="Assinatura da Zenith Dias">
+          <path class="t t--zenith" pathLength="1" d="M 52 62 C 66 44 104 38 128 46 C 142 51 138 64 120 78 C 104 91 82 110 70 124 C 62 133 68 140 80 140 C 96 140 110 133 120 124 C 128 116 126 104 136 102 C 146 100 150 112 142 120 C 136 127 128 129 122 126 C 128 136 142 140 154 132 C 158 128 160 112 159 104 C 158 116 157 128 159 133 C 163 120 171 104 181 104 C 189 104 189 122 187 133 C 191 124 196 110 201 104 C 205 112 203 126 205 133 C 210 126 219 96 225 66 C 227 56 232 57 230 68 C 225 94 219 118 221 130 C 223 138 233 136 241 126 C 248 116 261 74 269 54 C 273 46 279 49 275 62 C 267 88 257 116 257 133 C 261 118 269 104 279 104 C 287 104 287 121 285 133 C 291 126 299 119 307 117"/>
+          <path class="t t--d" pathLength="1" d="M 378 50 C 375 78 372 108 371 132 C 394 133 416 120 421 97 C 426 73 411 49 388 49 C 384 49 380 49 378 50"/>
+          <path class="t t--ias" pathLength="1" d="M 434 130 C 438 120 442 110 446 104 C 449 113 448 124 449 131 C 455 124 463 112 472 106 C 464 101 456 106 455 116 C 454 126 462 133 470 130 C 477 127 479 117 474 109 C 477 116 476 126 478 131 C 482 134 487 132 491 127 C 496 122 502 116 505 110 C 507 105 500 102 496 106 C 492 110 497 116 503 119 C 509 122 509 128 503 131 C 497 133 491 131 489 127"/>
+          <path class="t t--barra" pathLength="1" d="M 212 86 C 222 82 236 82 246 86"/>
+          <path class="t t--pingo1" pathLength="1" d="M 203 84 l 0.1 0"/>
+          <path class="t t--pingo2" pathLength="1" d="M 446 84 l 0.1 0"/>
+            <!-- O Zenith Point, pingado por último. É um circle e não um
+                 path com dasharray porque o gesto é outro: os traços a mão
+                 SÃO percorridos, este é PRESSIONADO. Daí a escala com um
+                 pequeno excesso, que é a caneta encostando e assentando. -->
+            <circle class="ponto" cx="520" cy="126" r="5.6"/>
+          </svg>
+            <span class="assinatura__fio" aria-hidden="true"></span>
+          </figure>
+
         <dl class="sobre__ficha rotulo" data-reveal style="--d:.28s">
           <div><dt>FOUNDED BY</dt><dd>GABRIEL DIAS</dd></div>
           <div><dt>EST.</dt><dd>2026</dd></div>
@@ -691,6 +727,7 @@
           <div><dt>ESCOPO</dt><dd>AVAILABLE WORLDWIDE</dd></div>
           <div><dt>MODELO</dt><dd>ESTÚDIO INDEPENDENTE</dd></div>
         </dl>
+        </div>
       </div>
     </div>
   </section>

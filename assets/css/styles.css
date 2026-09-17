@@ -1317,6 +1317,81 @@ html.menu-aberto .medidor { opacity: 0; }
   .sobre__grid { grid-template-columns: 1.25fr .75fr; align-items: start; }
 }
 .sobre__txt { display: flex; flex-direction: column; gap: 1.25rem; color: var(--fg-dim); max-width: 52ch; }
+.sobre__lado { display: flex; flex-direction: column; }
+
+/* ── A ASSINATURA QUE SE ESCREVE ─────────────────────────────────────────
+   Mesma mecânica do portfólio pessoal: a marca é REVELADA da esquerda para a
+   direita por clip-path, e um fio se desenha sob ela. Não é traçado de path —
+   traçar contorno de letra cheia desenharia o CONTORNO dela, não a escrita.
+
+   A ordem importa: o fio começa primeiro e a marca entra 0,55s depois. É a
+   leitura de assinar — risca-se a linha, depois assina-se em cima dela.
+
+   O gatilho é próprio, com 55% do bloco visível, e não o data-reveal do site,
+   que dispara com 12%: com 12% a escrita terminava enquanto o bloco ainda
+   espiava pela borda de baixo, e ninguém via. */
+.assinatura { margin: 0 0 clamp(1.75rem, 4vh, 2.75rem); }
+.assinatura__firma {
+  display: block; width: clamp(186px, 76%, 262px); height: auto;
+  overflow: visible;
+  fill: none; stroke: var(--fg);
+  stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round;
+}
+.assinatura__firma .t--pingo1,
+.assinatura__firma .t--pingo2 { stroke-width: 5.4; }
+.assinatura__firma .ponto { fill: var(--accent); stroke: none; }
+.assinatura__fio {
+  display: block; height: 1px; background: var(--rule);
+  margin-top: clamp(.8rem, 1.8vh, 1.2rem);
+}
+
+/* A ESCRITA.
+   pathLength="1" em cada traço deixa o dasharray independente do comprimento
+   real: 1 é o traço inteiro, offset 1 é a caneta ainda no ar.
+
+   Os tempos são proporcionais ao tamanho de cada traço, não iguais — caneta
+   que percorre "Zenith" e o pingo do i na mesma duração não lê como mão.
+
+   O estado inicial só existe com JS: sem ele a assinatura já está escrita,
+   porque nada a desenharia. */
+.has-js .assinatura__firma .t { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.has-js .assinatura__fio { transform: scaleX(0); transform-origin: left center; }
+
+.has-js .assinatura.is-assinada .assinatura__fio {
+  transform: scaleX(1);
+  transition: transform .9s cubic-bezier(.22, .7, .25, 1);
+}
+.has-js .assinatura.is-assinada .assinatura__firma .t {
+  stroke-dashoffset: 0;
+  /* linear de propósito: a mão não acelera no meio de uma letra */
+  transition: stroke-dashoffset var(--dur, .6s) linear var(--atraso, 0s);
+}
+.has-js .assinatura.is-assinada .t--zenith { --dur: 1.4s;  --atraso: .5s; }
+.has-js .assinatura.is-assinada .t--d      { --dur: .45s;  --atraso: 1.95s; }
+.has-js .assinatura.is-assinada .t--ias    { --dur: .75s;  --atraso: 2.45s; }
+.has-js .assinatura.is-assinada .t--barra  { --dur: .2s;   --atraso: 3.25s; }
+.has-js .assinatura.is-assinada .t--pingo1 { --dur: .1s;   --atraso: 3.5s; }
+.has-js .assinatura.is-assinada .t--pingo2 { --dur: .1s;   --atraso: 3.62s; }
+
+/* O ponto é PRESSIONADO, não percorrido: escala com um excesso curto, que é
+   a caneta encostando e assentando. transform-box: fill-box para a origem
+   ser o centro do próprio círculo e não a do SVG inteiro. */
+@keyframes zdPinga {
+  0%   { transform: scale(0); }
+  62%  { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+.has-js .assinatura__firma .ponto {
+  transform: scale(0);
+  transform-box: fill-box; transform-origin: center;
+}
+.has-js .assinatura.is-assinada .assinatura__firma .ponto {
+  /* A ultrapassagem fica nos KEYFRAMES (1,22 e assenta), que é o gesto da
+     tinta. A curva é a desaceleração do site: duas ultrapassagens empilhadas
+     — keyframe e curva — davam um repique maior do que o pretendido. */
+  animation: zdPinga .4s var(--e-out) 3.8s both;
+}
+
 .sobre__ficha { display: flex; flex-direction: column; border-top: 1px solid var(--rule); }
 .sobre__ficha > div {
   display: flex; justify-content: space-between; gap: 1.5rem;
@@ -1506,6 +1581,11 @@ html.menu-aberto .medidor { opacity: 0; }
   .loader { display: none !important; }
   .cursor { display: none !important; }
   .scroll-ind__fio i { animation: none; transform: none; height: 45%; }
+  /* a assinatura ja esta escrita: o JS poe .is-assinada na hora */
+  .assinatura__firma .t { stroke-dashoffset: 0 !important; }
+  .assinatura__firma .ponto { transform: none !important; animation: none !important; }
+  .assinatura__fio { transform: none !important; }
+
   /* a grade nao anda: o JS desenha um quadro so e para */
   /* a estrela nao bate: o JS desenha so o ponto parado */
   .planta, .planta__b { transform: none !important; }
