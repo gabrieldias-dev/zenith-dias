@@ -36,10 +36,11 @@ E a interação central: a **convergência** entre `REAL VALUE` e
 
 ---
 
-## O fundo que respira: uma prancha viva atrás de duas seções
+## O fundo que respira: uma prancha viva atrás de três seções
 
-O manifesto e `o problema` compartilham um desenho técnico de fundo
-que se mexe. Entrou em 16/09/2026.
+O manifesto, `o problema` e a filosofia compartilham um desenho
+técnico de fundo que se mexe. Entrou em 16/09/2026; a filosofia entrou no
+mesmo dia, algumas horas depois.
 
 ### Por que não pôde ser imagem
 
@@ -61,10 +62,23 @@ Saiu do arquivo dele por análise, não por olho:
 
 ### Uma prancha só, e o que ela custou
 
-As duas seções são janelas do MESMO desenho, que vai do topo do manifesto à
-base de `o problema`. As linhas atravessam a divisa. Medido:
-**14 de 14 guias casam na emenda**, e o desvio máximo de 4px está só nas duas
-diagonais — que é o correto, diagonal muda de x conforme desce.
+As três seções são janelas do MESMO desenho, que vai do topo do manifesto à
+base da filosofia. As linhas atravessam as duas divisas. Medido: **14 de 14
+guias casam** na emenda manifesto–problema e **4 de 5** na problema–filosofia,
+com desvio máximo de 3 a 4px só nas diagonais — que é o correto, diagonal
+muda de x conforme desce.
+
+### O papel vira, o desenho não
+
+A filosofia é clara. A prancha continua atravessando ela sem recomeçar: o
+que muda é a POLARIDADE — tinta escura sobre branco em vez de clara sobre
+preto. Medido nos pixels do canvas: `rgb(241,240,235)` n`o problema` e
+`rgb(9,9,11)` na filosofia. O azul acompanha, trocando o token de
+texto: #6A74EE sobre preto, #4E57D2 sobre branco, os dois a 5,0:1.
+
+O `--fg-faint` da filosofia sobe de .60 para .64 pela razão de sempre:
+em 0,15 de força, uma linha de preto puro sob a micro-tipo em .60 dá 4,46:1
+e fura a WCAG. Em .64 dá 5,03:1.
 
 Isso matou duas coisas que existiam antes, e as duas pela mesma razão:
 
@@ -94,6 +108,18 @@ existiu enquanto o manifesto era claro, foi apagada.
 
 O preço: o site é preto do hero ao pôster. Não é preto liso, porque essas
 duas têm desenho e ele se mexe, mas é um bloco longo.
+
+### A citação que parecia outra seção
+
+O `We don't decorate businesses` era um bloco de largura inteira
+embaixo da filosofia, com um fio atravessando a página. Era o FIO que a
+fazia ler como uma seção separada — fio de página inteira é divisor de
+seção em qualquer lugar do site.
+
+Ela entrou no grid, na coluna da direita, na segunda linha. O fio continua,
+mas agora tem a largura da coluna. Medido em 1440: a citação começa em 691,
+exatamente onde a coluna de texto começa, e o fio tem 619px em vez de 1238.
+No celular a coluna única devolve a ordem natural — manchete, texto, citação.
 
 ### A rede de segurança
 
@@ -573,17 +599,49 @@ motivo é concreto:** quatro aéreas quase iguais não são percebidas como troc
 Um rodízio que ninguém nota não é um rodízio — é uma imagem só custando quatro
 vezes mais. Eram 305KB por um efeito invisível por construção.
 
-A fonte é `visaoaerea3.png`, escolhida pelo Gabriel entre as quatro. As
-descartadas ficam em `estudos/capturas/` e nos estudos.
+A fonte mudou em 17/09/2026. Era `visaoaerea3.png`, escolhida entre as
+quatro aéreas; passou a ser uma aérea noturna com **luz azul discreta nos
+cruzamentos**, porque a anterior estava monocromática demais. As descartadas
+ficam em `estudos/capturas/` e nos estudos.
+
+#### O tratamento mudou junto, e num ponto de propósito
+
+**`saturation` subiu de 0,55 para 0,85.** Os 0,55 existiam para
+neutralizar a imagem — e neutralizar era exatamente o que não se queria desta
+vez. Medido em pixels visivelmente azuis:
+
+| | azuis |
+|---|---|
+| arquivo cru | 2,13% |
+| com 0,55, a receita antiga | 0,50% |
+| **com 0,85** | **0,91%** |
+| imagem anterior no ar | 0,00% |
+
+**`brightness` foi recalibrado, não copiado:** 0,632 em vez de 0,60,
+para a luminância média bater com a da imagem aprovada — 10,98 contra 10,75.
+
+E o que decide o contraste do H1 não é a média, é o pixel mais claro sob ele.
+Medido na faixa onde o título cai: **p99 de 75 contra 74, máximo de 153 contra
+157**. Como a reserva, o peso da revelação e a composição são os mesmos e
+lineares no valor do pixel, a luz sob o texto não mudou — que era o que o
+teste de contraste dependia.
+
+**`quality` subiu de 72 para 86.** Os halos azuis são gradiente suave,
+o que mais sofre com banda de compressão: o erro médio cai de 2,70 para 1,86 e
+o pico de 38 para 31, ao custo de 97KB.
+
+**A fonte nova tem os mesmos 1536x1024.** Não houve ganho de resolução, só de
+compressão — e por isso o `ZOOM` continua em 1,15.
 
 | | |
 |---|---|
-| Arquivo | `assets/img/fundo/aerea.webp`, 134KB, 1536x1024, q72 |
-| Peso do site | 581KB (quatro imagens) → **410KB** |
+| Arquivo | `assets/img/fundo/aerea-azul.webp`, 234KB, 1536x1024, q86 |
+| Peso do site | 574KB no total, dos quais 234KB são esta imagem |
 | Ciclo de enquadramentos | 6, ~25s para fechar a volta |
 
 **Sobrou orçamento para qualidade.** Com quatro imagens o encode tinha de ser
-`quality 42` em 1440px; com uma, é `quality 72` na resolução cheia da fonte.
+`quality 42` em 1440px; com uma, coube `quality 72` na resolução cheia da fonte — e
+depois `quality 86`, quando o azul entrou e o gradiente pediu mais.
 O artefato de compressão sumiu, e o arquivo ainda é menos da metade do
 conjunto anterior.
 
@@ -642,11 +700,11 @@ haver mais de uma imagem, ela precisa voltar também: baixar tudo de uma vez
 põe o que só será usado aos 8s disputando banda com o que é necessário aos
 1,4s.
 
-**O brilho (0,60 assado no arquivo) veio da calibragem contra a `aerea`
-antiga**, que foi a aprovada e medida a 6,9:1. Mantido de propósito ao trocar
-a fonte: mudar a imagem sem mudar a luz é o que permite reaproveitar o teste
+**O brilho vem sempre da calibragem contra a primeira `aerea`**, que
+foi a aprovada e medida a 6,9:1. É o método, não o número: em 17/09/2026 a
+fonte trocou e o valor foi de 0,60 para 0,632 justamente para a luz continuar
+a mesma. Mudar a imagem sem mudar a luz é o que permite reaproveitar o teste
 de contraste em vez de refazê-lo do zero.
-
 **A luz acende ATRÁS da frente, não sobre ela.** A primeira versão punha o
 brilho máximo na crista — e a crista é uma banda acesa, que engolia a imagem.
 E não basta ir um pouco para trás: a onda não é uma banda só. Eram três

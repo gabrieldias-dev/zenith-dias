@@ -339,12 +339,27 @@
        apareceu na anterior, que era a ideia original: cada varredura do
        sonar encontra um lugar diferente.
 
-       A fonte e visaoaerea3.png, escolhida pelo Gabriel entre as quatro. As
-       descartadas vivem em estudos/capturas/ e nos estudos.
+       A fonte mudou em 17/09/2026: o Gabriel gerou uma aerea noturna com luz
+       AZUL discreta nos cruzamentos, porque a anterior estava monocromatica
+       demais. As descartadas vivem em estudos/capturas/ e nos estudos.
 
-       O BRILHO (0.60 assado no arquivo) veio da calibragem contra a aerea
-       antiga, que foi a aprovada e medida. Mantido para nao mudar a luz que
-       ja passou pelo teste de contraste.
+       O TRATAMENTO MUDOU JUNTO, e num ponto de proposito:
+
+       saturation 0.85, e nao os 0.55 da receita antiga. Os 0.55 existiam
+       para neutralizar a imagem — e neutralizar era exatamente o que nao se
+       queria agora. Medido: em 0.55 sobravam 0,50% de pixels azuis contra os
+       2,13% do arquivo cru; em 0.85 sobram 0,91%. A imagem anterior tinha
+       0,00%, ou seja, azul nenhum.
+
+       brightness 0.632, calibrado contra a aerea aprovada para nao mexer na
+       luz que ja passou no teste de contraste: a nova fica com L media 10,98
+       contra 10,75 da antiga. E o que decide o contraste do H1 nao e a media
+       e sim o pixel mais claro sob ele — medido na faixa do titulo, p99 de 75
+       contra 74, maximo de 153 contra 157. A luz sob o texto e a mesma.
+
+       quality 86 e nao 72: os halos azuis sao gradiente suave, que e o que
+       mais sofre com banda de compressao. Custa 234KB contra 137, e derruba
+       o erro medio de 2,70 para 1,86 e o pico de 38 para 31.
 
        O tratamento (dessaturar e escurecer) esta ASSADO em cada .webp.
        Filtrar a imagem inteira 60 vezes por segundo para um efeito que nunca
@@ -352,7 +367,7 @@
     var CAUDA = 640;
     var mascara = null;
 
-    var FOTO = 'assets/img/fundo/aerea.webp';
+    var FOTO = 'assets/img/fundo/aerea-azul.webp';
     var img = null;
 
     /* ZOOM e o preco do enquadramento, e ele e literal: desenhar a imagem
@@ -719,7 +734,10 @@
   };
 
   function gradeViva() {
-    var secoes = qa('.manifesto, .problema');
+    /* TRÊS seções na mesma prancha desde 16/09/2026. A filosofia entrou com
+       o papel virado: fundo claro, tinta escura. O desenho não recomeça nela
+       — continua, e só a polaridade muda. */
+    var secoes = qa('.manifesto, .problema, .filosofia');
     if (secoes.length < 2) return;
     if (!document.createElement('canvas').getContext) return;
 
@@ -728,14 +746,16 @@
       cv.className = 'grade';
       cv.setAttribute('aria-hidden', 'true');
       sec.insertBefore(cv, sec.firstChild);
-      return { sec: sec, cv: cv, ctx: cv.getContext('2d'), w: 0, h: 0, dpr: 0 };
+      return { sec: sec, cv: cv, ctx: cv.getContext('2d'),
+               claro: sec.classList.contains('s-light'),
+               w: 0, h: 0, dpr: 0 };
     });
 
     /* So agora a imagem do CSS sai de cena. Se qualquer coisa acima tivesse
        falhado, a secao ficaria sem fundo nenhum. */
     html.classList.add('grade-viva');
 
-    var y0 = 0, hv = 0, laco = null, visivel = false, t0 = 0;
+    var y0 = 0, hv = 0, laco = null;
 
     function mede() {
       var a = telas[0].sec, b = telas[telas.length - 1].sec;
@@ -762,14 +782,35 @@
       var esc = Math.max(W / GRADE.LARG, hv / GRADE.ALT);
       var dw = GRADE.LARG * esc, dh = GRADE.ALT * esc;
       var rel = T.sec.offsetTop - y0, sobra = dh - hv;
-      var ox = -(dw - W) / 2, oy = -rel - sobra / 2;
+      var oy = -rel - sobra / 2;
+
+      /* ONDE A JANELA HORIZONTAL CAI.
+         No desktop a prancha quase cabe na largura e a janela e quase tudo:
+         fica centrada, 0,50.
+
+         No CELULAR a prancha e esticada pela ALTURA — a escala vem de
+         hv/941, nao de W/1672 — e sobra uma janela de so ~16% da largura do
+         desenho. Centrada, ela caia na faixa do meio, e essa faixa nao tem
+         circulo NENHUM: medido, arco visivel zero. O fundo se mexia e nao
+         dava para perceber, porque o que se mexe ali e so um no e uma guia.
+
+         Em 0,20 entram TRES tracejados (0,776 de arco contra 0,000) mais
+         cinco nos — e de quebra e uma faixa de tinta mais calma que a
+         direita, onde estao os 4,98% da borda. */
+      var foco = fone.matches ? 0.20 : 0.50;
+      var ox = limita(W / 2 - foco * dw, W - dw, 0);
 
       var X = function (f) { return ox + f * dw; };
       var Y = function (f) { return oy + f * dh; };
       var R = function (f) { return f * dw; };
 
       var t = tempo * GRADE.VEL;
-      var cor = function (a) { return 'rgba(241, 240, 235, ' + a + ')'; };
+      /* A tinta segue o papel: clara sobre preto, escura sobre branco. */
+      var tinta = T.claro ? '9, 10, 12' : '241, 240, 235';
+      /* O azul também: o token de texto muda de lado — #6A74EE sobre preto,
+         #4E57D2 sobre branco, os dois a 5,0:1 no fundo deles. */
+      var azul = T.claro ? '78, 87, 210' : '106, 116, 238';
+      var cor = function (a) { return 'rgba(' + tinta + ', ' + a + ')'; };
       ctx.lineWidth = 1;
 
       GRADE.VERT.forEach(function (g, i) {
@@ -808,8 +849,8 @@
         var p = 0.5 + 0.5 * Math.sin(t / 2600 + i * 1.37);
         var x = X(n[0]), r = R(.0016) * (1 + p * 0.9), halo = r * 4.5;
         var g = ctx.createRadialGradient(x, y, 0, x, y, halo);
-        g.addColorStop(0, 'rgba(241, 240, 235, ' + (0.30 * p).toFixed(3) + ')');
-        g.addColorStop(1, 'rgba(241, 240, 235, 0)');
+        g.addColorStop(0, 'rgba(' + tinta + ', ' + (0.30 * p).toFixed(3) + ')');
+        g.addColorStop(1, 'rgba(' + tinta + ', 0)');
         ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, halo, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = cor(0.55 + 0.45 * p);
         ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
@@ -821,10 +862,10 @@
         var pa = 0.5 + 0.5 * Math.sin(t / 4100);
         var ax = X(GRADE.AZUL[0]), ar = R(.0022) * (1 + pa * 0.75);
         var ga = ctx.createRadialGradient(ax, ay, 0, ax, ay, ar * 6);
-        ga.addColorStop(0, 'rgba(106, 116, 238, ' + (0.42 * pa).toFixed(3) + ')');
-        ga.addColorStop(1, 'rgba(106, 116, 238, 0)');
+        ga.addColorStop(0, 'rgba(' + azul + ', ' + (0.42 * pa).toFixed(3) + ')');
+        ga.addColorStop(1, 'rgba(' + azul + ', 0)');
         ctx.fillStyle = ga; ctx.beginPath(); ctx.arc(ax, ay, ar * 6, 0, Math.PI * 2); ctx.fill();
-        ctx.fillStyle = 'rgba(106, 116, 238, ' + (0.7 + 0.3 * pa).toFixed(3) + ')';
+        ctx.fillStyle = 'rgba(' + azul + ', ' + (0.7 + 0.3 * pa).toFixed(3) + ')';
         ctx.beginPath(); ctx.arc(ax, ay, ar, 0, Math.PI * 2); ctx.fill();
       }
     }
@@ -839,37 +880,38 @@
       });
     }
 
+    /* O TEMPO E ABSOLUTO, sem marco zero.
+       Havia um t0 que era rezerado toda vez que o laco religava, e isso fazia
+       a fase da animacao SALTAR de volta ao inicio: tracejado pulando, nos
+       pulando. Como tudo aqui e funcao de sin(t/periodo) e (t/x)%y, o relogio
+       da propria pagina serve, e a fase fica continua para sempre. */
     function passo(ts) {
       laco = requestAnimationFrame(passo);
-      if (!t0) t0 = ts;
-      desenha(ts - t0);
+      desenha(ts);
     }
 
-    /* Fora da tela o laco para: e fundo de duas secoes, nao ha por que gastar
-       bateria desenhando o que ninguem ve. Movimento reduzido tambem para,
-       mas com um quadro desenhado — a grade continua la, so nao anda. */
+    /* O LACO NAO PARA MAIS.
+       Ele parava quando nenhuma secao estava na tela, e um IntersectionObserver
+       decidia isso — errado. O callback do observer recebe so as entradas que
+       MUDARAM, entao quando o manifesto saia da tela com 'o problema' ainda
+       visivel, o es.some() via uma entrada so, e ela false: o laco morria com
+       secao na tela. Com tres secoes isso acontecia o tempo todo.
+
+       O guarda que importa nunca foi esse, e sim o de dentro do desenha(), que
+       ja pula tela por tela o que esta fora de vista. Com o laco sempre vivo,
+       o custo longe das secoes e um rAF que nao pinta nada — medido abaixo de
+       0,05ms. Por isso o observer saiu inteiro: menos peca, menos bug.
+
+       Movimento reduzido continua parando, com um quadro desenhado. */
     function confere() {
-      var deve = visivel && !calmo.matches;
-      if (deve && !laco) { t0 = 0; laco = requestAnimationFrame(passo); }
-      else if (!deve && laco) { cancelAnimationFrame(laco); laco = null; }
-      /* Desenha SEMPRE que o estado muda, inclusive ao ligar o laco: se o rAF
-         estiver estrangulado — aba voltando do fundo — o primeiro quadro
-         demoraria e a secao apareceria sem fundo nenhum. */
-      desenha(0);
+      if (!calmo.matches && !laco) laco = requestAnimationFrame(passo);
+      else if (calmo.matches && laco) { cancelAnimationFrame(laco); laco = null; }
+      desenha(performance.now());
     }
-
-    if ('IntersectionObserver' in window) {
-      var obs = new IntersectionObserver(function (es) {
-        visivel = es.some(function (e) { return e.isIntersecting; });
-        confere();
-      }, { threshold: 0 });
-      telas.forEach(function (T) { obs.observe(T.sec); });
-    } else { visivel = true; }
 
     if (calmo.addEventListener) calmo.addEventListener('change', confere);
-    window.addEventListener('resize', function () { if (!laco) desenha(0); });
+    window.addEventListener('resize', function () { if (!laco) desenha(performance.now()); });
 
-    desenha(0);
     confere();
   }
 

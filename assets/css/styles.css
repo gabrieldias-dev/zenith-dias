@@ -773,20 +773,33 @@ html.menu-aberto .medidor { opacity: 0; }
    puro sob a micro-tipo — dá 4,72:1, e o teto real é 0,18, onde fura os 4,5:1
    da WCAG. Em 0,22 a linha deixava de ler como textura e virava MARCA, e
    marca cruzando linha de texto parece tachado; por isso não subiu mais.  */
-.manifesto, .problema {
+.manifesto, .problema, .filosofia {
   /* isolation: o z-index negativo da camada fica ATRÁS do conteúdo e à FRENTE
      do fundo da seção, sem escapar para o contexto de cima. */
   isolation: isolate;
 }
 
+/* A FILOSOFIA É A MESMA PRANCHA COM O PAPEL VIRADO.
+   Ela entrou na prancha em 16/09/2026: o desenho continua atravessando a
+   divisa, mas ali o fundo é claro e a tinta é escura. Por isso o fallback
+   dela é a positiva — a mesma imagem invertida, com o matiz do ponto azul
+   devolvido (negate troca o matiz em 180°, modulate o traz de volta).
+
+   O --fg-faint sobe de .60 para .64 SÓ aqui, pela mesma razão de sempre: em
+   0,15 de força, uma linha de preto puro sob a micro-tipo em .60 dá 4,46:1 e
+   fura a WCAG. Em .64 dá 5,03:1, e de quebra ela fica mais legível no liso. */
+.filosofia { --fg-faint: rgba(9, 10, 12, .64); }
+
 .manifesto::after,
-.problema::after {
+.problema::after,
+.filosofia::after {
   content: '';
   position: absolute; inset: 0; z-index: -1;
   background: url('../img/fundo/grade-negativa.webp') center / cover no-repeat;
   opacity: var(--grade, .15);
   pointer-events: none;
 }
+.filosofia::after { background-image: url('../img/fundo/grade-positiva.webp'); }
 
 /* O canvas só toma o lugar da imagem depois de existir de verdade. A classe
    vem do JS DEPOIS que as telas foram criadas — se o módulo falhar no meio,
@@ -797,7 +810,8 @@ html.menu-aberto .medidor { opacity: 0; }
   opacity: var(--grade, .15);
 }
 .grade-viva .manifesto::after,
-.grade-viva .problema::after { display: none; }
+.grade-viva .problema::after,
+.grade-viva .filosofia::after { display: none; }
 
 .manifesto__grid { display: grid; gap: clamp(2.5rem, 6vw, 5rem); }
 @media (min-width: 60rem) {
@@ -1041,10 +1055,17 @@ html.menu-aberto .medidor { opacity: 0; }
 }
 @media (min-width: 60rem) { .filosofia__txt { padding-top: .5rem; } }
 
+/* Fecho da filosofia, na coluna da DIREITA — pedido do Gabriel em
+   16/09/2026. O fio continua, mas agora ele tem a largura da coluna em vez
+   de atravessar a página: fio de página inteira é exatamente o que fazia a
+   citação ler como uma seção separada. */
 .destaque {
-  margin-top: clamp(4rem, 10vh, 8rem);
-  padding-top: clamp(2rem, 4vh, 3rem);
+  margin-top: clamp(2.5rem, 6vh, 4.5rem);
+  padding-top: clamp(1.75rem, 3.5vh, 2.5rem);
   border-top: 1px solid var(--rule);
+}
+@media (min-width: 60rem) {
+  .destaque { grid-column: 2; margin-top: clamp(3rem, 7vh, 5rem); }
 }
 .destaque p {
   font-size: var(--t-h2);
